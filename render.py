@@ -13,10 +13,11 @@ sys.path.append(dir_path)
 from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box
 
 
-# TODO
-# - bounding box
-# - ability to specify color (can use hue augmentation)
+# Yolo Detection
+# - write out in Yolo format with bounding boxes
+# - render multiple images, multiple parts
 # - transparent colors
+# - ability to specify color (can use hue augmentation)
 # - list of parts + color combinations
 
 # Part to render

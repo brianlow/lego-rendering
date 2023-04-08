@@ -23,3 +23,23 @@ and lighting can be controlled.
 # Run
 
 ./render.sh
+
+
+
+# Output format
+my_dataset.yml
+my_dataset/
+  train/
+    images/
+      3001_1.png
+      3001_2.png
+    labels/
+      3001_1.txt
+      3001_2.txt
+  val/
+    images/
+      3001_1.png
+      3001_2.png
+    labels/
+      3001_1.txt
+      3001_2.txt
