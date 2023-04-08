@@ -1,5 +1,6 @@
 import bpy
 import random
+import bpy_extras.object_utils
 from math import radians
 from mathutils import Vector, Matrix
 
@@ -29,3 +30,25 @@ def rotate_object_around_scene_origin(obj, angle_degrees):
 
     # Apply the rotation matrix to the object's matrix_world
     obj.matrix_world = rotation_matrix @ obj.matrix_world
+
+def project_3d_to_2d(camera, point):
+    scene = bpy.context.scene
+    render = scene.render
+    width, height = render.resolution_x, render.resolution_y
+
+    co_2d = bpy_extras.object_utils.world_to_camera_view(scene, camera, point)
+    return Vector((co_2d.x * width, co_2d.y * height))
+
+def get_2d_bounding_box(obj, camera):
+    bbox = [obj.matrix_world @ Vector(corner) for corner in obj.bound_box]
+
+    # Project each corner of the bounding box to 2D screen coordinates
+    screen_coords = [project_3d_to_2d(camera, corner) for corner in bbox]
+
+    # Calculate the 2D bounding box
+    min_x = min(coord.x for coord in screen_coords)
+    max_x = max(coord.x for coord in screen_coords)
+    min_y = min(coord.y for coord in screen_coords)
+    max_y = max(coord.y for coord in screen_coords)
+
+    return [(min_x, min_y), (max_x, max_y)]

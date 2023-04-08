@@ -9,9 +9,16 @@ and lighting can be controlled.
 - [Blender](https://blender.org)
 - [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
 - [LDraw parts library](https://library.ldraw.org/updates?latest)
+  - extract into ./ldraw, e.g. ./ldraw/parts/30010.dat
 - Python
 
+```
 ./setup.sh
+
+ cd /Applications/Blender.app/Contents/Resources/3.5/python/bin
+ ./python3-10 -m pip install pillow
+```
+
 
 # Run
 
