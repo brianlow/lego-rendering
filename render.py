@@ -10,7 +10,7 @@ from mathutils import Vector, Matrix
 # Add current directory to the path so we can import our own modules
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
-from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back
+from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back, reset_scene
 
 
 # Yolo Detection
@@ -24,21 +24,29 @@ from utils import rotate_object_randomly, place_object_on_ground, rotate_object_
 partnames = "3001", "3004", "3022", "4274"
 partname = "3001"
 
+# Set the number of images to generate
+num_images_per_part = 10
+
+# 10% of generated images will be used for validation, remaining for training
+percent_val = 0.1
+
 # Input output paths
 ldraw_path = "./ldraw"
 ldraw_parts_path = "./ldraw/parts"
 renders_path = "./renders"
-output_path = "./renders/dataset/train"
-os.makedirs(output_path, exist_ok=True)
-os.makedirs(os.path.join(output_path, "images"), exist_ok=True)
-os.makedirs(os.path.join(output_path, "labels"), exist_ok=True)
+train_path = "./renders/dataset/train"
+val_path = "./renders/dataset/val"
+
+os.makedirs(train_path, exist_ok=True)
+os.makedirs(os.path.join(train_path, "images"), exist_ok=True)
+os.makedirs(os.path.join(train_path, "labels"), exist_ok=True)
+os.makedirs(val_path, exist_ok=True)
+os.makedirs(os.path.join(val_path, "images"), exist_ok=True)
+os.makedirs(os.path.join(val_path, "labels"), exist_ok=True)
 
 # Render at the resolution needed by YOLO (i.e. standard Imagenet size)
 render_width = 224
 render_height = 224
-
-# Set the number of images to generate
-num_images_per_part = 1
 
 # Loop through each LDraw file in the directory
 # for filename in os.listdir(ldraw_path):
@@ -59,6 +67,8 @@ if not os.path.exists(part_filename):
     print(f"Part file not found: {part_filename}")
     sys.exit()
 
+reset_scene()
+
 bpy.ops.import_scene.importldraw(filepath=part_filename, **options)
 
 part = bpy.data.objects[0]
@@ -73,8 +83,9 @@ bpy.context.scene.render.resolution_y = render_height
 
 bpy.ops.object.select_all(action='DESELECT')
 
-
 for i in range(num_images_per_part):
+    output_path = val_path if random.random() <= percent_val else train_path
+
     # Randomly rotate the part
     rotate_object_randomly(part)
     place_object_on_ground(part)

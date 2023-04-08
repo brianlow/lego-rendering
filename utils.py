@@ -85,3 +85,13 @@ def move_camera_back(camera, percentage):
 
     # Move the camera along the scaled vector
     camera.location += scaled_vector
+
+def reset_scene():
+    # Create a new scene with default settings
+    new_scene = bpy.data.scenes.new("New Scene")
+
+    # Set the new scene as the active scene
+    bpy.context.window.scene = new_scene
+
+    # Delete the old scene
+    bpy.data.scenes.remove(bpy.context.scene)
