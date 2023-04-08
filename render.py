@@ -5,12 +5,12 @@ import sys
 import random
 from math import radians
 from mathutils import Vector, Matrix
-from PIL import Image, ImageDraw
+
 
 # Add current directory to the path so we can import our own modules
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
-from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box
+from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box
 
 
 # Yolo Detection
@@ -21,7 +21,8 @@ from utils import rotate_object_randomly, place_object_on_ground, rotate_object_
 # - list of parts + color combinations
 
 # Part to render
-partname = "3001"
+partnames = "3001", "3004", "3022",
+partname = "4274"
 
 # Input output paths
 ldraw_path = "./ldraw"
@@ -33,7 +34,7 @@ render_width = 224
 render_height = 224
 
 # Set the number of images to generate
-num_images = 1
+num_images_per_part = 3
 
 # Loop through each LDraw file in the directory
 # for filename in os.listdir(ldraw_path):
@@ -57,38 +58,38 @@ if not os.path.exists(part_filename):
 bpy.ops.import_scene.importldraw(filepath=part_filename, **options)
 
 part = bpy.data.objects[0]
-rotate_object_randomly(part)
-place_object_on_ground(part)
-
-# The importer creates a light for us at roughly 45 angle above the part
-# Rotate the light in a circle around the part so renders have somewhat random shadows
 light = bpy.data.objects['Light']
-rotate_object_around_scene_origin(light, random.uniform(0, 360))
-
-# Aim and position the camera so the part is centered in the frame.
-# The importer can do this for us but we rotate and move the part
-# after importing so would need to do it again anyways.
 camera = bpy.data.objects['Camera']
-bpy.ops.object.select_all(action='DESELECT')
-part.select_set(True)
-bpy.ops.view3d.camera_to_view_selected()
 
-# Render
-i = 0
-output_filename = os.path.join(output_path, partname + "_{}.png".format(i))
 bpy.context.scene.render.engine = 'CYCLES'
 bpy.context.scene.cycles.samples = 16 # increase for higher quality
 bpy.context.scene.cycles.max_bounces = 2
 bpy.context.scene.render.resolution_x = render_width
 bpy.context.scene.render.resolution_y = render_height
-bpy.context.scene.render.filepath = output_filename
-bpy.ops.render.render(write_still=True)
 
-bounding_box = get_2d_bounding_box(part, camera)
-image = Image.open(output_filename)
-draw = ImageDraw.Draw(image)
-draw.rectangle(bounding_box, outline=(0, 255, 0), width=2)
-image.save(os.path.join(output_path, partname + "_{}_bounding.png".format(i)), 'PNG')
+bpy.ops.object.select_all(action='DESELECT')
+
+
+for i in range(num_images_per_part):
+    # Randomly rotate the part
+    rotate_object_randomly(part)
+    place_object_on_ground(part)
+
+    # The importer creates a light for us at roughly 45 angle above the part
+    # Rotate the light in a circle around the part so renders have somewhat random shadows
+    rotate_object_around_scene_origin(light, random.uniform(0, 360))
+
+    # Aim and position the camera so the part is centered in the frame.
+    # The importer can do this for us but we rotate and move the part
+    # after importing so would need to do it again anyways.
+    part.select_set(True)
+    bpy.ops.view3d.camera_to_view_selected()
+
+    output_filename = os.path.join(output_path, partname + "_{}.png".format(i))
+    bpy.context.scene.render.filepath = output_filename
+    bpy.ops.render.render(write_still=True)
+
+    bounding_box = get_2d_bounding_box(part, camera)
 
 # Save a Blender file so we can debug this script
 bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(output_path, "render.blend")))

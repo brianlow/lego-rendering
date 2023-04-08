@@ -1,3 +1,4 @@
+import os
 import bpy
 import random
 import bpy_extras.object_utils
@@ -52,3 +53,11 @@ def get_2d_bounding_box(obj, camera):
     max_y = max(coord.y for coord in screen_coords)
 
     return [(min_x, min_y), (max_x, max_y)]
+
+def draw_bounding_box(bounding_box, input_filename):
+    from PIL import Image, ImageDraw
+    image = Image.open(input_filename)
+    draw = ImageDraw.Draw(image)
+    draw.rectangle(bounding_box, outline=(0, 255, 0), width=2)
+    base, ext = os.path.splitext(input_filename)
+    image.save(base + "_bounding" + ext)
