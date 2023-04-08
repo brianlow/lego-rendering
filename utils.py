@@ -54,6 +54,19 @@ def get_2d_bounding_box(obj, camera):
 
     return [(min_x, min_y), (max_x, max_y)]
 
+# Converts from
+#   [(min_x, min_y), (max_x, max_y)] in pixels
+# to
+#   [center_x, center_y, width, height] normalized to 0.0-1.0
+#
+def bounding_box_to_dataset_format(bounding_box, width, height):
+  [(min_x, min_y), (max_x, max_y)] = bounding_box
+  box_width = max_x - min_x
+  box_height = max_y - min_y
+  center_x = min_x + (box_width / 2)
+  center_y = min_y + (box_height / 2)
+  return [center_x/width, center_y/width, box_width/width, box_height/height]
+
 def draw_bounding_box(bounding_box, input_filename):
     from PIL import Image, ImageDraw
     image = Image.open(input_filename)
@@ -61,3 +74,14 @@ def draw_bounding_box(bounding_box, input_filename):
     draw.rectangle(bounding_box, outline=(0, 255, 0), width=2)
     base, ext = os.path.splitext(input_filename)
     image.save(base + "_bounding" + ext)
+
+def move_camera_back(camera, percentage):
+    # Get the camera's forward vector (negative local Z-axis)
+    forward_vector = camera.matrix_world.to_3x3() @ Vector((0, 0, 1))
+    # forward_vector = -forward_vector  # Negate the vector
+
+    # Scale the forward vector by the specified percentage
+    scaled_vector = forward_vector * percentage
+
+    # Move the camera along the scaled vector
+    camera.location += scaled_vector

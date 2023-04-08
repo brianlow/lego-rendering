@@ -10,7 +10,7 @@ from mathutils import Vector, Matrix
 # Add current directory to the path so we can import our own modules
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
-from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box
+from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back
 
 
 # Yolo Detection
@@ -21,20 +21,24 @@ from utils import rotate_object_randomly, place_object_on_ground, rotate_object_
 # - list of parts + color combinations
 
 # Part to render
-partnames = "3001", "3004", "3022",
-partname = "4274"
+partnames = "3001", "3004", "3022", "4274"
+partname = "3001"
 
 # Input output paths
 ldraw_path = "./ldraw"
 ldraw_parts_path = "./ldraw/parts"
-output_path = "./renders"
+renders_path = "./renders"
+output_path = "./renders/dataset/train"
+os.makedirs(output_path, exist_ok=True)
+os.makedirs(os.path.join(output_path, "images"), exist_ok=True)
+os.makedirs(os.path.join(output_path, "labels"), exist_ok=True)
 
 # Render at the resolution needed by YOLO (i.e. standard Imagenet size)
 render_width = 224
 render_height = 224
 
 # Set the number of images to generate
-num_images_per_part = 3
+num_images_per_part = 1
 
 # Loop through each LDraw file in the directory
 # for filename in os.listdir(ldraw_path):
@@ -84,12 +88,21 @@ for i in range(num_images_per_part):
     # after importing so would need to do it again anyways.
     part.select_set(True)
     bpy.ops.view3d.camera_to_view_selected()
+    move_camera_back(camera, .4)
 
-    output_filename = os.path.join(output_path, partname + "_{}.png".format(i))
-    bpy.context.scene.render.filepath = output_filename
+    image_filename = os.path.join(output_path, "images", partname + "_{}.png".format(i))
+    label_filename = os.path.join(output_path, "labels", partname + "_{}.txt".format(i))
+
+    bpy.context.scene.render.filepath = image_filename
     bpy.ops.render.render(write_still=True)
 
     bounding_box = get_2d_bounding_box(part, camera)
+    print(bounding_box)
+    bounding_box = bounding_box_to_dataset_format(bounding_box, render_width, render_height)
+    print(bounding_box)
+    with open(label_filename, 'w') as f:
+        f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
+
 
 # Save a Blender file so we can debug this script
-bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(output_path, "render.blend")))
+bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(renders_path, "render.blend")))
