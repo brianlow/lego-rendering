@@ -21,11 +21,11 @@ from utils import rotate_object_randomly, place_object_on_ground, rotate_object_
 # - list of parts + color combinations
 
 # Part to render
-partnames = "3001", "3004", "3022", "4274"
-partname = "3001"
+partnames = ["3004", "3001", "4274"]
+# partnames = ["3001"]
 
 # Set the number of images to generate
-num_images_per_part = 10
+num_images_per_part = 25
 
 # 10% of generated images will be used for validation, remaining for training
 percent_val = 0.1
@@ -34,6 +34,8 @@ percent_val = 0.1
 ldraw_path = "./ldraw"
 ldraw_parts_path = "./ldraw/parts"
 renders_path = "./renders"
+dataset_yaml_path = "./renders/dataset.yaml"
+dataset_path = "./renders/dataset"
 train_path = "./renders/dataset/train"
 val_path = "./renders/dataset/val"
 
@@ -48,72 +50,86 @@ os.makedirs(os.path.join(val_path, "labels"), exist_ok=True)
 render_width = 224
 render_height = 224
 
-# Loop through each LDraw file in the directory
-# for filename in os.listdir(ldraw_path):
-#    if filename.endswith(".ldr"):
-        # Import the LDraw file
+for partname in partnames:
+    bpy.ops.object.select_all(action='DESELECT')
 
-# Options for importing the part
-# https://github.com/TobyLobster/ImportLDraw/blob/09dd286d294672c816d33e70ac10146beb69693c/importldraw.py
-options = {
-    "ldrawPath": os.path.abspath(ldraw_path),
-    "addEnvironment": True,   # add a white ground plane
-    "resPrims": "High",       # high resolution primitives
-    "useLogoStuds": True,     # LEGO logo on studs
-}
+    # Select all objects in the current scene
+    for obj in bpy.context.scene.objects:
+        if obj.type not in {'LIGHT', 'CAMERA'}:
+            obj.select_set(True)
 
-part_filename = os.path.abspath(os.path.join(ldraw_parts_path, f"{partname}.dat"))
-if not os.path.exists(part_filename):
-    print(f"Part file not found: {part_filename}")
-    sys.exit()
+    # Delete selected objects
+    bpy.ops.object.delete()
 
-reset_scene()
 
-bpy.ops.import_scene.importldraw(filepath=part_filename, **options)
+    # Import the part into Blender
+    # Options for importing the part
+    # https://github.com/TobyLobster/ImportLDraw/blob/09dd286d294672c816d33e70ac10146beb69693c/importldraw.py
+    part_filename = os.path.abspath(os.path.join(ldraw_parts_path, f"{partname}.dat"))
+    options = {
+        "ldrawPath": os.path.abspath(ldraw_path),
+        "addEnvironment": True,   # add a white ground plane
+        "resPrims": "High",       # high resolution primitives
+        "useLogoStuds": True,     # LEGO logo on studs
+    }
+    if not os.path.exists(part_filename):
+        print(f"Part file not found: {part_filename}")
+        sys.exit()
+    bpy.ops.import_scene.importldraw(filepath=part_filename, **options)
+    bpy.ops.object.select_all(action='DESELECT')
 
-part = bpy.data.objects[0]
-light = bpy.data.objects['Light']
-camera = bpy.data.objects['Camera']
+    part = bpy.data.objects[0]
+    light = bpy.data.objects['Light']
+    camera = bpy.data.objects['Camera']
 
-bpy.context.scene.render.engine = 'CYCLES'
-bpy.context.scene.cycles.samples = 16 # increase for higher quality
-bpy.context.scene.cycles.max_bounces = 2
-bpy.context.scene.render.resolution_x = render_width
-bpy.context.scene.render.resolution_y = render_height
+    # Do this after import b/c the importer overwrites some of these settings
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = 16 # increase for higher quality
+    bpy.context.scene.cycles.max_bounces = 2
+    bpy.context.scene.render.resolution_x = render_width
+    bpy.context.scene.render.resolution_y = render_height
 
-bpy.ops.object.select_all(action='DESELECT')
+    for i in range(num_images_per_part):
+        output_path = val_path if random.random() <= percent_val else train_path
+        image_filename = os.path.join(output_path, "images", partname + "_{}.png".format(i))
+        label_filename = os.path.join(output_path, "labels", partname + "_{}.txt".format(i))
 
-for i in range(num_images_per_part):
-    output_path = val_path if random.random() <= percent_val else train_path
+        # Randomly rotate the part
+        rotate_object_randomly(part)
+        place_object_on_ground(part)
 
-    # Randomly rotate the part
-    rotate_object_randomly(part)
-    place_object_on_ground(part)
+        # Move the light so each image has a random shadow
+        # The importer creates a light for us at roughly 45 angle above the part so
+        # we rotate it around the part (at the origin)
+        rotate_object_around_scene_origin(light, random.uniform(0, 360))
 
-    # The importer creates a light for us at roughly 45 angle above the part
-    # Rotate the light in a circle around the part so renders have somewhat random shadows
-    rotate_object_around_scene_origin(light, random.uniform(0, 360))
+        # Aim and position the camera so the part is centered in the frame.
+        # The importer can do this for us but we rotate and move the part
+        # after importing so would need to do it again anyways.
+        part.select_set(True)
+        bpy.ops.view3d.camera_to_view_selected()
+        move_camera_back(camera, .4)
 
-    # Aim and position the camera so the part is centered in the frame.
-    # The importer can do this for us but we rotate and move the part
-    # after importing so would need to do it again anyways.
-    part.select_set(True)
-    bpy.ops.view3d.camera_to_view_selected()
-    move_camera_back(camera, .4)
+        # Render
+        bpy.context.scene.render.filepath = image_filename
+        bpy.ops.render.render(write_still=True)
 
-    image_filename = os.path.join(output_path, "images", partname + "_{}.png".format(i))
-    label_filename = os.path.join(output_path, "labels", partname + "_{}.txt".format(i))
-
-    bpy.context.scene.render.filepath = image_filename
-    bpy.ops.render.render(write_still=True)
-
-    bounding_box = get_2d_bounding_box(part, camera)
-    print(bounding_box)
-    bounding_box = bounding_box_to_dataset_format(bounding_box, render_width, render_height)
-    print(bounding_box)
-    with open(label_filename, 'w') as f:
-        f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
+        # Save label and bounding box
+        bounding_box = get_2d_bounding_box(part, camera)
+        bounding_box = bounding_box_to_dataset_format(bounding_box, render_width, render_height)
+        with open(label_filename, 'w') as f:
+            f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
 
 
 # Save a Blender file so we can debug this script
 bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(renders_path, "render.blend")))
+
+# Output a dataset yaml file
+with open(dataset_yaml_path, 'w') as f:
+  f.write(f"# Path must be an absolute path unless it is Ultralytics standard location\n")
+  f.write(f"path: {os.path.abspath(dataset_path)}\n")
+  f.write(f"train: train/images\n")
+  f.write(f"val: val/images\n")
+  f.write(f"\n")
+  f.write(f"names:\n")
+  f.write(f"  0: lego\n")
