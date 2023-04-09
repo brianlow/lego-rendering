@@ -10,7 +10,7 @@ from mathutils import Vector, Matrix
 # Add current directory to the path so we can import our own modules
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
-from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back, reset_scene
+from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back, reset_scene, change_object_color
 
 
 # Yolo Detection
@@ -25,7 +25,7 @@ partnames = ["3004", "3001", "4274"]
 # partnames = ["3001"]
 
 # Set the number of images to generate
-num_images_per_part = 25
+num_images_per_part = 3
 
 # 10% of generated images will be used for validation, remaining for training
 percent_val = 0.1
@@ -97,6 +97,7 @@ for partname in partnames:
         # Randomly rotate the part
         rotate_object_randomly(part)
         place_object_on_ground(part)
+        change_object_color(part, (random.random(), random.random(), random.random(), 0))
 
         # Move the light so each image has a random shadow
         # The importer creates a light for us at roughly 45 angle above the part so

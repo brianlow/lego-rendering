@@ -95,3 +95,9 @@ def reset_scene():
 
     # Delete the old scene
     bpy.data.scenes.remove(bpy.context.scene)
+
+def change_object_color(obj, new_color):
+    # This is very specific to how ImportLdraw creates the matieral
+    # so will be someone fragile
+    bpy.data.materials["Material_4_c"].node_tree.nodes["Group"].inputs[0].default_value = new_color
+    return
