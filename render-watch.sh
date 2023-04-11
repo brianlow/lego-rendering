@@ -2,4 +2,4 @@
 
 set -e
 
-find . | entr ./render.sh
+find . -name '*.py' | entr ./render.sh

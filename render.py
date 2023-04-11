@@ -6,12 +6,11 @@ import random
 from math import radians
 from mathutils import Vector, Matrix
 
-
 # Add current directory to the path so we can import our own modules
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
 from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back, reset_scene, change_object_color
-
+from colors import Color
 
 # Yolo Detection
 # - write out in Yolo format with bounding boxes
@@ -25,7 +24,7 @@ partnames = ["3004", "3001", "4274"]
 # partnames = ["3001"]
 
 # Set the number of images to generate
-num_images_per_part = 3
+num_images_per_part = 1
 
 # 10% of generated images will be used for validation, remaining for training
 # Setting this to 0 when experimenting makes it easier to review the results
@@ -53,6 +52,7 @@ os.makedirs(os.path.join(val_path, "labels"), exist_ok=True)
 # Render at the resolution needed by YOLO (i.e. standard Imagenet size)
 render_width = 224
 render_height = 224
+
 
 for partname in partnames:
     bpy.ops.object.select_all(action='DESELECT')
@@ -101,12 +101,15 @@ for partname in partnames:
         # Randomly rotate the part
         rotate_object_randomly(part)
         place_object_on_ground(part)
-        change_object_color(part, (random.random(), random.random(), random.random(), 0))
+        change_object_color(part, random.choice(list(Color)).value)
 
         # Move the light so each image has a random shadow
         # The importer creates a light for us at roughly 45 angle above the part so
         # we rotate it around the part (at the origin)
         rotate_object_around_scene_origin(light, random.uniform(0, 360))
+        # light.data.type = 'AREA'
+        # light.data.size = size
+        light.data.energy = .01
 
         # Aim and position the camera so the part is centered in the frame.
         # The importer can do this for us but we rotate and move the part
