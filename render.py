@@ -28,10 +28,11 @@ partnames = ["3004", "3001", "4274"]
 num_images_per_part = 3
 
 # 10% of generated images will be used for validation, remaining for training
+# Setting this to 0 when experimenting makes it easier to review the results
 percent_val = 0.1
 
 # True for quick draft renders (1s per image on M1 Mac), False for high quality renders (10s per image on M1 Mac)
-draft = False
+draft = True
 
 # Input output paths
 ldraw_path = "./ldraw"
