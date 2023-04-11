@@ -30,6 +30,9 @@ num_images_per_part = 3
 # 10% of generated images will be used for validation, remaining for training
 percent_val = 0.1
 
+# True for quick draft renders (1s per image on M1 Mac), False for high quality renders (10s per image on M1 Mac)
+draft = False
+
 # Input output paths
 ldraw_path = "./ldraw"
 ldraw_parts_path = "./ldraw/parts"
@@ -68,9 +71,9 @@ for partname in partnames:
     part_filename = os.path.abspath(os.path.join(ldraw_parts_path, f"{partname}.dat"))
     options = {
         "ldrawPath": os.path.abspath(ldraw_path),
-        "addEnvironment": True,   # add a white ground plane
-        "resPrims": "High",       # high resolution primitives
-        "useLogoStuds": True,     # LEGO logo on studs
+        "addEnvironment": True,                       # add a white ground plane
+        "resPrims": "Standard" if draft else "High",  # high resolution primitives
+        "useLogoStuds": False if draft else True,     # LEGO logo on studs
     }
     if not os.path.exists(part_filename):
         print(f"Part file not found: {part_filename}")
@@ -84,7 +87,7 @@ for partname in partnames:
 
     # Do this after import b/c the importer overwrites some of these settings
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 16 # increase for higher quality
+    bpy.context.scene.cycles.samples = 16 if draft else 256 # increase for higher quality
     bpy.context.scene.cycles.max_bounces = 2
     bpy.context.scene.render.resolution_x = render_width
     bpy.context.scene.render.resolution_y = render_height
