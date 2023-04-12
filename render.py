@@ -20,18 +20,19 @@ from colors import Color
 # - list of parts + color combinations
 
 # Part to render
-partnames = ["3001", "3004", "4274"]
+partnames = ["4073","3004","3022","3003","11211","3665","3713","60592","60483","6536"]
+# partnames = ["3001", "3004", "4274"]
 # partnames = ["3001"]
 
 # Set the number of images to generate
-num_images_per_part = 1
+num_images_per_part = 200
 
 # 10% of generated images will be used for validation, remaining for training
 # Setting this to 0 when experimenting makes it easier to review the results
-percent_val = 0.0
+percent_val = 0.1
 
 # True for quick draft renders (1s per image on M1 Mac), False for high quality renders (10s per image on M1 Mac)
-draft = True
+draft = False
 
 randomize = True
 
