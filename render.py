@@ -10,7 +10,8 @@ from mathutils import Vector, Matrix
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(dir_path)
 from utils import rotate_object_randomly, place_object_on_ground, rotate_object_around_scene_origin, get_2d_bounding_box, draw_bounding_box, bounding_box_to_dataset_format, move_camera_back, reset_scene, change_object_color, move_object_away_from_origin, default_lighting, soft_lighting, hard_lighting
-from colors import Color
+from colors import Color, random_color_for_blender, random_color_for_pil
+from background import save_background_image
 
 # Yolo Detection
 # - write out in Yolo format with bounding boxes
@@ -34,7 +35,13 @@ percent_val = 0.1
 # True for quick draft renders (1s per image on M1 Mac), False for high quality renders (10s per image on M1 Mac)
 draft = False
 
+# Randomize object color, orientation and lighting
 randomize = True
+
+# Percentage of images to render as backgrounds with no parts
+percent_background = 0.05
+
+
 
 # Input output paths
 ldraw_path = "./ldraw"
@@ -57,6 +64,7 @@ render_width = 224
 render_height = 224
 
 
+# Render parts
 for partname in partnames:
     bpy.ops.object.select_all(action='DESELECT')
 
@@ -105,7 +113,7 @@ for partname in partnames:
         if randomize:
             rotate_object_randomly(part)
             place_object_on_ground(part)
-            change_object_color(part, random.choice(list(Color)).value)
+            change_object_color(part, random_color_for_blender())
 
         # Move the light so each image has a random shadow
         # The importer creates a light for us at roughly 45 angle above the part so
@@ -138,6 +146,21 @@ for partname in partnames:
 
 # Save a Blender file so we can debug this script
 bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(renders_path, "render.blend")))
+
+# Render backgrounds
+num_images = len(partnames) * num_images_per_part
+num_background_images = int(num_images * percent_background)
+for i in range(num_background_images):
+    # pick random color but prefer white to match converyor belt
+    color = random_color_for_pil() if random.random() < 0.5 else (255, 255, 255)
+    # pick random number of shapes to draw but prefer no shapes
+    num_shapes = 0 if random.random() < 0.5 else random.randint(0, 20)
+    image_filename = os.path.join(train_path, "images", "background_{}.png".format(i))
+    label_filename = os.path.join(train_path, "labels", "background_{}.txt".format(i))
+    filename = os.path.join(train_path, "images", )
+    save_background_image(color, (render_width, render_height), num_shapes, image_filename)
+    with open(label_filename, 'w') as f:
+        pass
 
 # Output a dataset yaml file
 with open(dataset_yaml_path, 'w') as f:

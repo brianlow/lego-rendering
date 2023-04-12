@@ -1,4 +1,6 @@
+import random
 from enum import Enum
+import colorsys
 
 class Color(Enum):
     BLUE = (0.000, 0.333, 0.749, 1)
@@ -40,3 +42,14 @@ class Color(Enum):
     SAND_GREEN = (0.627, 0.737, 0.675, 1)
     DARK_PINK = (0.784, 0.439, 0.627, 1)
     TRANS_DARK_BLUE = (0.000, 0.125, 0.627, 1)
+
+def random_color_for_blender():
+  return random.choice(list(Color)).value
+
+def random_color_for_pil():
+  color = random_color_for_blender()
+  return (int(color[0] * 255), int(color[1] * 255), int(color[2] * 255))
+
+# hsv in floats (0-1), rgb in ints (0-255)
+def hsv2rgb(h,s,v):
+    return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(h,s,v))
