@@ -139,10 +139,10 @@ for partname in partnames:
 
         # Save label and bounding box
         bounding_box = get_2d_bounding_box(part, camera)
+        # draw_bounding_box(bounding_box, image_filename)
         bounding_box = bounding_box_to_dataset_format(bounding_box, render_width, render_height)
         with open(label_filename, 'w') as f:
             f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
-
 
 # Save a Blender file so we can debug this script
 bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(os.path.join(renders_path, "render.blend")))
