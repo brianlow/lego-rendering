@@ -25,6 +25,20 @@ and lighting can be controlled.
 ./render.sh
 
 
+# Paperspace
+
+zip -r lego-2k-images-10classes.zip renders/dataset renders/dataset.yaml
+
+- upload to AWS
+- download from AWS
+
+unzip lego-2k-images-10classes.zip
+mv renders lego-2k-images-10classes
+edit the path in dataset.yaml
+cd /notebooks
+pip install -r requirements.txt
+export COMET_API_KEY=...
+python train.py
 
 # Output format
 my_dataset.yml
