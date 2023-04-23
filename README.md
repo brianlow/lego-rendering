@@ -25,7 +25,7 @@ and lighting can be controlled.
 ./render.sh
 
 
-# Paperspace
+# Get the dataset onto Paperspace
 
 zip -r lego-2k-images-10classes.zip renders/dataset renders/dataset.yaml
 

@@ -4,6 +4,7 @@ import random
 import bpy_extras.object_utils
 from math import radians
 from mathutils import Vector, Matrix
+import glob
 
 
 def rotate_object_randomly(obj, min_angle=-360, max_angle=360):
@@ -212,3 +213,7 @@ def hard_lighting(light):
     light.data.energy = 100
     bpy.data.scenes['Scene'].view_settings.exposure = -2
     bpy.data.scenes["Scene"].view_settings.look = 'High Contrast'
+
+def file_exists(pattern, search_path):
+    matching = glob.glob(os.path.join(search_path, '**', pattern), recursive=True)
+    return len(matching) > 0
