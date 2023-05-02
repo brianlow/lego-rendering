@@ -22,11 +22,13 @@ and lighting can be controlled.
 
 # Run
 
+```
 ./render.sh
-
+```
 
 # Get the dataset onto Paperspace
 
+```
 # zip
 zip -r myzip.zip renders/dataset renders/dataset.yaml
 
@@ -36,7 +38,6 @@ aws s3 cp myzip.zip s3://brian-lego-public/myzip.zip
 # download
 wget https://brian-lego-public.s3.us-west-1.amazonaws.com/myzip.zip -o myzip.zip
 
-
 unzip lego-2k-images-10classes.zip
 mv renders lego-2k-images-10classes
 edit the path in dataset.yaml
@@ -44,8 +45,11 @@ cd /notebooks
 pip install -r requirements.txt
 export COMET_API_KEY=...
 python train.py
+```
 
 # Output format
+
+```
 my_dataset.yml
 my_dataset/
   train/
@@ -62,3 +66,4 @@ my_dataset/
     labels/
       3001_1.txt
       3001_2.txt
+```
