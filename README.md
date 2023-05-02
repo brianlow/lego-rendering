@@ -27,10 +27,15 @@ and lighting can be controlled.
 
 # Get the dataset onto Paperspace
 
-zip -r lego-2k-images-10classes.zip renders/dataset renders/dataset.yaml
+# zip
+zip -r myzip.zip renders/dataset renders/dataset.yaml
 
-- upload to AWS
-- download from AWS
+# upload
+aws s3 cp myzip.zip s3://brian-lego-public/myzip.zip
+
+# download
+wget https://brian-lego-public.s3.us-west-1.amazonaws.com/myzip.zip -o myzip.zip
+
 
 unzip lego-2k-images-10classes.zip
 mv renders lego-2k-images-10classes

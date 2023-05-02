@@ -38,7 +38,7 @@ num_images_per_part = 2
 # Setting this to 0 when experimenting makes it easier to review the results
 percent_val = 0.2
 
-# True for quick draft renders (1s per image on M1 Mac), False for high quality renders (10s per image on M1 Mac)
+# True for quick draft renders (1s per image on M1 Pro Mac), False for high quality renders (10s per image on M1 Pro Mac)
 draft = False
 
 # Randomize object color, orientation and lighting
