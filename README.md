@@ -1,8 +1,38 @@
 # Lego Rendering Pipeline
 
-These scripts render individual parts on a white background from various angles.
-Used for training an image classifier for lego sorting where the background
-and lighting can be controlled.
+Render semi-realistic, individual parts. Primarily used to train
+machine learning models for detection, part classification and color
+classification.
+
+This uses LDraw's part models and Blender to produce a render.
+
+
+# Samples
+
+Most LDraw parts can be rendered:
+
+![grid of parts](docs/parts.png)
+
+Parts can rotated to various angles. The parts are moved up/down to
+remain touching the ground.
+
+![grid of various rotations](docs/part_rotations.png)
+
+Colors: colors can be specified with an RGBA tuple. Also included are a list of named colors from Rebrickable. Only a standard plastic material is supported. Would like to support more materials like transparent and rubber.
+
+![grid of colors](docs/colors.png)
+
+Lighting Styles: default, soft, hard
+
+![grid of lighting styles](docs/lighting_styles.png)
+
+Lighting angle around the part
+
+![grid of light angles](docs/light_angles.png)
+
+Camera zoom:
+
+![grid of various zoom levels](docs/zooms.png)
 
 
 # Setup
@@ -19,8 +49,13 @@ and lighting can be controlled.
  ./python3-10 -m pip install pillow
 ```
 
-
 # Run
+```
+./run.sh test.py
+./run-watch.sh test.py
+```
+
+# Run Old
 
 ```
 ./render.sh

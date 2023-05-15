@@ -1,0 +1,84 @@
+import bpy
+import os
+from math import radians
+from lib.renderer.utils import place_object_on_ground, rotate_object_around_scene_origin, zoom_camera, change_object_color
+from lib.renderer.lighting import apply_lighting_style
+
+# Render Lego parts
+# This class is responsible for rendering a single part
+# and a single image based on the callers parameters for
+# for the scene. It abstracts Blender and LDraw models
+class Renderer:
+    def __init__(self, ldraw_path = "./ldraw"):
+        self.ldraw_path = ldraw_path
+        self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
+        self.current_ldraw_part_id = None
+
+    def render_part(self, ldraw_part_id, options):
+        if ldraw_part_id != self.current_ldraw_part_id:
+            self.import_part(ldraw_part_id, options)
+
+        part = bpy.data.objects[0]
+        light = bpy.data.objects['Light']
+        camera = bpy.data.objects['Camera']
+
+        # Do this after import b/c the importer overwrites some of these settings
+        bpy.context.scene.render.engine = 'CYCLES'
+        bpy.context.scene.cycles.samples = options.render_samples
+        bpy.context.scene.cycles.max_bounces = 2
+        bpy.context.scene.render.resolution_x = options.render_width
+        bpy.context.scene.render.resolution_y = options.render_height
+
+        rotation = options.part_rotation_radian
+        rotation = (rotation[0], rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
+        part.rotation_euler = rotation
+        place_object_on_ground(part)
+        change_object_color(part, options.part_color)
+
+        # The importer creates a light for us at roughly 45 angle above the part so
+        apply_lighting_style(light, options.lighting_style)
+        rotate_object_around_scene_origin(light, options.light_angle)
+
+        # Aim and position the camera so the part is centered in the frame.
+        # The importer can do this for us but we rotate and move the part
+        # after importing so would need to do it again anyways.
+        part.select_set(True)
+        bpy.ops.view3d.camera_to_view_selected()
+        zoom_camera(camera, options.zoom)
+
+        # Render
+        bpy.context.scene.render.filepath = options.image_filename
+        bpy.ops.render.render(write_still=True)
+
+        # Save a Blender file so we can debug this script
+        if options.blender_filename:
+            bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(options.blender_filename))
+
+    def import_part(self, ldraw_part_id, options):
+        self.clear_scene()
+
+        part_filename = os.path.abspath(os.path.join(self.ldraw_parts_path, f"{ldraw_part_id}.dat"))
+        if not os.path.exists(part_filename):
+            raise FileNotFoundError(f"Part file not found: {part_filename}")
+
+        # Import the part into the scene
+        # https://github.com/TobyLobster/ImportLDraw/blob/09dd286d294672c816d33e70ac10146beb69693c/importldraw.py
+        bpy.ops.import_scene.importldraw(filepath=part_filename, **{
+            "ldrawPath": os.path.abspath(self.ldraw_path),
+            "addEnvironment": True,                  # add a white ground plane
+            "resPrims": options.res_prisms,          # high resolution primitives
+            "useLogoStuds": options.use_logo_studs,  # LEGO logo on studs
+        })
+
+        bpy.ops.object.select_all(action='DESELECT')
+
+    def clear_scene(self):
+        bpy.ops.object.select_all(action='DESELECT')
+
+        # Select all objects in the current scene
+        for obj in bpy.context.scene.objects:
+            if obj.type not in {'LIGHT', 'CAMERA'}:
+                obj.select_set(True)
+
+        # Delete selected objects
+        bpy.ops.object.delete()
