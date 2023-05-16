@@ -6,6 +6,9 @@ classification.
 
 This uses LDraw's part models and Blender to produce a render.
 
+Renders typically take 15s on an M1 Pro. There is a draft mode
+that takes a few seconds.
+
 
 # Samples
 

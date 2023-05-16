@@ -5,9 +5,8 @@ from lib.renderer.utils import place_object_on_ground, rotate_object_around_scen
 from lib.renderer.lighting import apply_lighting_style
 
 # Render Lego parts
-# This class is responsible for rendering a single part
-# and a single image based on the callers parameters for
-# for the scene. It abstracts Blender and LDraw models
+# This class is responsible for rendering a single image
+# for a single part. It abstracts Blender and LDraw models
 class Renderer:
     def __init__(self, ldraw_path = "./ldraw"):
         self.ldraw_path = ldraw_path
