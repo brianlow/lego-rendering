@@ -9,7 +9,7 @@ def grid(images, rows=1, cols=1):
     # Create an empty image with correct size
     total_width = cols * width
     total_height = rows * height
-    new_image = Image.new('RGB', (total_width, total_height))
+    new_image = Image.new('RGBA', (total_width, total_height))
 
     # Paste the images
     for i, img in enumerate(images):

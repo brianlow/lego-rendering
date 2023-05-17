@@ -166,10 +166,11 @@ def zoom_camera(camera, percentage):
 #     bpy.data.scenes.remove(bpy.context.scene)
 
 
-def change_object_color(obj, new_color):
+def change_object_color(obj, new_color, options):
     # This is very specific to how ImportLdraw creates the matieral
     # so will be someone fragile
-    bpy.data.materials["Material_4_c"].node_tree.nodes["Group"].inputs[0].default_value = new_color
+    material_name = "MatInst_4" if options.instructions else "Material_4_c"
+    bpy.data.materials[material_name].node_tree.nodes["Group"].inputs[0].default_value = new_color
     return
 
 

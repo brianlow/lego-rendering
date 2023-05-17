@@ -12,7 +12,7 @@ sys.path.insert(0, dir_path)
 
 from lib.image_utils import grid
 from lib.colors import Color
-from lib.renderer.render_options import RenderOptions, Quality, LightingStyle
+from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look
 from lib.renderer.renderer import Renderer
 
 renderer = Renderer(ldraw_path="./ldraw")
@@ -24,7 +24,7 @@ default_options = RenderOptions(
     lighting_style=LightingStyle.DEFAULT,
     part_color=Color.DARK_BLUE.value,
     zoom=0.8,
-    part_rotation=(0, 0, 0)
+    part_rotation=(0, 0, 0),
 )
 
 
@@ -104,3 +104,15 @@ for i, zoom in enumerate(zooms):
 images = [Image.open(f"renders/docs{i}.png") for i, s in enumerate(zooms)]
 image = grid(images, 1, 5)
 image.save("docs/zooms.png")
+
+for i, part in enumerate(parts):
+    options = copy(default_options)
+    options.image_filename = f"renders/docs{i}.png"
+    options.part_color = Color.WHITE.value
+    options.look = Look.INSTRUCTIONS
+    options.quality = Quality.DRAFT # cleaner without LEGO on studs
+    renderer.render_part(part, options)
+
+images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(parts)]
+image = grid(images, 2, 5)
+image.save("docs/instructions.png")

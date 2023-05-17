@@ -10,6 +10,10 @@ class LightingStyle(Enum):
     SOFT = 'soft'
     HARD = 'hard'
 
+class Look(Enum):
+    NORMAL = 'normal'              # realistic
+    INSTRUCTIONS = 'instructions'  # line art
+
 class RenderOptions:
     def __init__(self,
                  image_filename,           # output filename
@@ -22,6 +26,7 @@ class RenderOptions:
                  part_color = (0.788, 0.102, 0.035, 1),        # color of the part, RGBA tuple (0 - 1.0)
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
                  zoom = 0.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
+                 look = Look.NORMAL         # normal (realistic) or instructions (line art)
                  ):
         self.render_width = render_width
         self.render_height = render_height
@@ -33,10 +38,15 @@ class RenderOptions:
         self.part_color = part_color
         self.part_rotation = part_rotation
         self.zoom = zoom
+        self.look = look
 
     @property
     def draft(self):
         return self.quality == Quality.DRAFT
+
+    @property
+    def instructions(self):
+        return self.look == Look.INSTRUCTIONS
 
     @property
     def res_prisms(self):
@@ -54,3 +64,7 @@ class RenderOptions:
     @property
     def part_rotation_radian(self):
         return tuple(map(radians, self.part_rotation))
+
+    @property
+    def transparent_background(self):
+        return self.instructions

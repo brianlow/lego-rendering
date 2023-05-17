@@ -27,21 +27,33 @@ class Renderer:
         bpy.context.scene.cycles.max_bounces = 2
         bpy.context.scene.render.resolution_x = options.render_width
         bpy.context.scene.render.resolution_y = options.render_height
+        bpy.context.scene.render.film_transparent = options.transparent_background
+
 
         rotation = options.part_rotation_radian
         rotation = (rotation[0], rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
         part.rotation_euler = rotation
         place_object_on_ground(part)
-        change_object_color(part, options.part_color)
+        change_object_color(part, options.part_color, options)
 
         # The importer creates a light for us at roughly 45 angle above the part so
         apply_lighting_style(light, options.lighting_style)
         rotate_object_around_scene_origin(light, options.light_angle)
 
+        # The importer does not handle instructions look properly
+        # If we skip the line that errors, we still need to re-enable these:
+        # https://github.com/TobyLobster/ImportLDraw/issues/76
+        if options.instructions:
+            for layer in bpy.context.scene.view_layers:
+                for collection in layer.layer_collection.children:
+                    collection.exclude = False
+
         # Aim and position the camera so the part is centered in the frame.
         # The importer can do this for us but we rotate and move the part
         # after importing so would need to do it again anyways.
         part.select_set(True)
+        camera.data.type = 'PERSP' # I prefer perspective even for instructions
+        camera.data.lens = 200 # Long focal length so perspective is minor
         bpy.ops.view3d.camera_to_view_selected()
         zoom_camera(camera, options.zoom)
 
@@ -67,6 +79,7 @@ class Renderer:
             "addEnvironment": True,                  # add a white ground plane
             "resPrims": options.res_prisms,          # high resolution primitives
             "useLogoStuds": options.use_logo_studs,  # LEGO logo on studs
+            "look": options.look.value,              # normal (realistic) or instructions (line art)
         })
 
         bpy.ops.object.select_all(action='DESELECT')

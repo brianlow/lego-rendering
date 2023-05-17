@@ -38,6 +38,10 @@ Camera zoom:
 ![grid of various zoom levels](docs/zooms.png)
 
 
+Instruction style:
+
+![grid of various parts in line art style](docs/instructions.png)
+
 # Setup
 - [Blender](https://blender.org)
 - [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
