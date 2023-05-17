@@ -40,6 +40,10 @@ Camera zoom:
 
 Instruction style:
 
+Unfortunately, the importer we use has [a bug](https://github.com/TobyLobster/ImportLDraw/issues/76). After running setup.sh,
+open '~/Library/Application Support/Blender/3.5/scripts/addons/io_scene_importldraw/loadldraw/loadldraw.py' and in setupInstructionsLook() add `return` statement
+before `render.alpha_mode = 'TRANSPARENT'`.
+
 ![grid of various parts in line art style](docs/instructions.png)
 
 # Setup
@@ -51,24 +55,19 @@ Instruction style:
 
 ```
 ./setup.sh
-
- cd /Applications/Blender.app/Contents/Resources/3.5/python/bin
- ./python3-10 -m pip install pillow
 ```
 
 # Run
 ```
 ./run.sh test.py
-./run-watch.sh test.py
+
+./run-watch.sh test.py   # run test.py each time a .py file is saved
 ```
 
-# Run Old
 
-```
-./render.sh
-```
+# Old Notes
 
-# Get the dataset onto Paperspace
+### Get the dataset onto Paperspace
 
 ```
 # zip
@@ -89,7 +88,7 @@ export COMET_API_KEY=...
 python train.py
 ```
 
-# Output format
+###  Output format
 
 ```
 my_dataset.yml
