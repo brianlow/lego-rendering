@@ -50,7 +50,11 @@ before `render.alpha_mode = 'TRANSPARENT'`.
 - [Blender](https://blender.org)
 - [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
 - [LDraw parts library](https://library.ldraw.org/updates?latest)
+  - download the complete zip
   - extract into ./ldraw, e.g. ./ldraw/parts/30010.dat
+- [LDraw unofficial parts](https://library.ldraw.org/tracker)
+  - download all Unofficial Files
+  - extract into ./ldraw/unofficial, e.g. ./ldraw/unofficial/parts/22388.dat
 - Python
 
 ```

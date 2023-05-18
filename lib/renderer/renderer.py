@@ -11,6 +11,7 @@ class Renderer:
     def __init__(self, ldraw_path = "./ldraw"):
         self.ldraw_path = ldraw_path
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
+        self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
         self.current_ldraw_part_id = None
 
     def render_part(self, ldraw_part_id, options):
@@ -70,7 +71,9 @@ class Renderer:
 
         part_filename = os.path.abspath(os.path.join(self.ldraw_parts_path, f"{ldraw_part_id}.dat"))
         if not os.path.exists(part_filename):
-            raise FileNotFoundError(f"Part file not found: {part_filename}")
+            part_filename = os.path.abspath(os.path.join(self.ldraw_unofficial_parts_path, f"{ldraw_part_id}.dat"))
+            if not os.path.exists(part_filename):
+                raise FileNotFoundError(f"Part file not found: {part_filename}")
 
         # Import the part into the scene
         # https://github.com/TobyLobster/ImportLDraw/blob/09dd286d294672c816d33e70ac10146beb69693c/importldraw.py

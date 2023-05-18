@@ -9,6 +9,8 @@ def apply_lighting_style(light, style):
         soft_lighting(light)
     elif style == LightingStyle.HARD:
         hard_lighting(light)
+    elif style == LightingStyle.BRIGHT:
+        bright_lighting(light)
 
 def default_lighting(light):
     move_object_away_from_origin(light, 5)
@@ -17,6 +19,13 @@ def default_lighting(light):
     bpy.data.scenes['Scene'].view_settings.exposure = 0
     bpy.data.scenes["Scene"].view_settings.look = 'None'
 
+# Good for rendering white instructional parts
+def bright_lighting(light):
+    move_object_away_from_origin(light, 5)
+    light.data.shadow_soft_size = 0.1
+    light.data.energy = 1
+    bpy.data.scenes['Scene'].view_settings.exposure = 2
+    bpy.data.scenes["Scene"].view_settings.look = 'None'
 
 def soft_lighting(light):
     move_object_away_from_origin(light, 1)

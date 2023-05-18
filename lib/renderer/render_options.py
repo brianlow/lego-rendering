@@ -9,6 +9,7 @@ class LightingStyle(Enum):
     DEFAULT = 'default'
     SOFT = 'soft'
     HARD = 'hard'
+    BRIGHT = 'bright'
 
 class Look(Enum):
     NORMAL = 'normal'              # realistic
