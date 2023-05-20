@@ -12,7 +12,7 @@ that takes a few seconds.
 
 # Samples
 
-Most LDraw parts can be rendered:
+In theory this can render any LDraw part. However I've only tested with typical plastic Lego parts. Parts are specified using their LDraw ID. In many cases this will be same as the mold number on the part (beward multiple molds over time) but not always.
 
 ![grid of parts](docs/parts.png)
 
