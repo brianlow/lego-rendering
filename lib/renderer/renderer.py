@@ -1,8 +1,8 @@
 import bpy
 import os
 from math import radians
-from lib.renderer.utils import place_object_on_ground, rotate_object_around_scene_origin, zoom_camera, change_object_color
-from lib.renderer.lighting import apply_lighting_style
+from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color
+from lib.renderer.lighting import setup_lighting
 
 # Render Lego parts
 # This class is responsible for rendering a single image
@@ -19,7 +19,6 @@ class Renderer:
             self.import_part(ldraw_part_id, options)
 
         part = bpy.data.objects[0]
-        light = bpy.data.objects['Light']
         camera = bpy.data.objects['Camera']
 
         # Do this after import b/c the importer overwrites some of these settings
@@ -29,7 +28,8 @@ class Renderer:
         bpy.context.scene.render.resolution_x = options.render_width
         bpy.context.scene.render.resolution_y = options.render_height
         bpy.context.scene.render.film_transparent = options.transparent_background
-
+        bpy.context.scene.view_settings.view_transform = 'Standard'
+        bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = 0 # turn off ambient lighting
 
         rotation = options.part_rotation_radian
         rotation = (rotation[0], rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
@@ -37,9 +37,7 @@ class Renderer:
         place_object_on_ground(part)
         change_object_color(part, options.part_color, options)
 
-        # The importer creates a light for us at roughly 45 angle above the part so
-        apply_lighting_style(light, options.lighting_style)
-        rotate_object_around_scene_origin(light, options.light_angle)
+        setup_lighting(options)
 
         # The importer does not handle instructions look properly
         # If we skip the line that errors, we still need to re-enable these:
@@ -92,7 +90,7 @@ class Renderer:
 
         # Select all objects in the current scene
         for obj in bpy.context.scene.objects:
-            if obj.type not in {'LIGHT', 'CAMERA'}:
+            if obj.type not in {'CAMERA'}:
                 obj.select_set(True)
 
         # Delete selected objects

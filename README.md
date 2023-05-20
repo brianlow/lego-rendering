@@ -25,7 +25,7 @@ Colors: colors can be specified with an RGBA tuple. Also included are a list of 
 
 ![grid of colors](docs/colors.png)
 
-Lighting Styles: default, soft, hard
+Lighting Styles: default, hard
 
 ![grid of lighting styles](docs/lighting_styles.png)
 

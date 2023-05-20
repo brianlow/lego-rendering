@@ -1,7 +1,6 @@
 import os
 import bpy
 import random
-import bpy_extras.object_utils
 from math import radians
 from mathutils import Vector, Matrix
 import glob
@@ -12,7 +11,6 @@ def rotate_object_randomly(obj, min_angle=-360, max_angle=360):
     random_y = radians(random.uniform(min_angle, max_angle))
     random_z = radians(random.uniform(min_angle, max_angle))
     obj.rotation_euler = (random_x, random_y, random_z)
-
 
 def place_object_on_ground(obj):
     # Update the object's bounding box data
@@ -27,16 +25,14 @@ def place_object_on_ground(obj):
     obj.location.z -= lowest_z
 
 
-def rotate_object_around_scene_origin(obj, angle_degrees):
-    # Convert the angle from degrees to radians
-    angle_radians = radians(angle_degrees)
+def rotate_around_z_origin(object, angle_in_degrees):
+    angle_in_radians = radians(angle_in_degrees)
+    rot_mat = Matrix.Rotation(angle_in_radians, 4, 'Z')
+    object.location = rot_mat @ object.location
 
-    # Create the rotation matrix around the Z-axis
-    rotation_matrix = Matrix.Rotation(angle_radians, 4, 'Z')
-
-    # Apply the rotation matrix to the object's matrix_world
-    obj.matrix_world = rotation_matrix @ obj.matrix_world
-
+def aim_towards_origin(object):
+    direction = Vector((0, 0, 0)) - object.location
+    object.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
 
 def clamp(x, minimum, maximum):
     return max(minimum, min(x, maximum))

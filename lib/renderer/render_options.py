@@ -7,9 +7,7 @@ class Quality(Enum):
 
 class LightingStyle(Enum):
     DEFAULT = 'default'
-    SOFT = 'soft'
     HARD = 'hard'
-    BRIGHT = 'bright'
 
 class Look(Enum):
     NORMAL = 'normal'              # realistic
@@ -17,13 +15,13 @@ class Look(Enum):
 
 class RenderOptions:
     def __init__(self,
-                 image_filename,           # output filename
-                 render_width = 224,       # standard Imagenet size
-                 render_height = 224,      # standard Imagenet size
-                 quality = Quality.NORMAL, # trade between speed and quality
-                 blender_filename = None,  # optionally save a .blend file to debug the render
+                 image_filename,            # output filename
+                 render_width = 224,        # standard Imagenet size
+                 render_height = 224,       # standard Imagenet size
+                 quality = Quality.NORMAL,  # trade between speed and quality
+                 blender_filename = None,   # optionally save a .blend file to debug the render
                  lighting_style = LightingStyle.DEFAULT, # default, soft, hard
-                 light_angle = 0,          # angle of the light rotated around the z-axis, 0 - 360
+                 light_angle = 210,         # angle of the light rotated around the z-axis, 0 - 360
                  part_color = (0.788, 0.102, 0.035, 1),        # color of the part, RGBA tuple (0 - 1.0)
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
                  zoom = 0.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in

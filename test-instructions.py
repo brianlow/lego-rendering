@@ -20,11 +20,10 @@ options = RenderOptions(
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
     light_angle = 210,
-    # part_color = Color.ORANGE.value,
-    part_color = (1.000, .223, 0, 1),  # Pantone orange
+    part_color = (1, 1, 1, 1),
     part_rotation=(0, 0, 0),
     zoom=0.6,
-    look=Look.NORMAL,
+    look=Look.INSTRUCTIONS,
     render_width=244,
     render_height=244,
 )
