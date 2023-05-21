@@ -25,7 +25,7 @@ class RenderOptions:
                  part_color = (0.788, 0.102, 0.035, 1),        # color of the part, RGBA tuple (0 - 1.0)
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
                  camera_height = 45,        # height of the camera as degrees above the ground plane, 0 - 180
-                 zoom = 0.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
+                 zoom = 1.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
                  look = Look.NORMAL         # normal (realistic) or instructions (line art)
                  ):
         self.render_width = render_width
