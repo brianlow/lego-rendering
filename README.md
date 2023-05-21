@@ -40,10 +40,6 @@ Camera zoom:
 
 Instruction style:
 
-Unfortunately, the importer we use has [a bug](https://github.com/TobyLobster/ImportLDraw/issues/76). After running setup.sh,
-open '~/Library/Application Support/Blender/3.5/scripts/addons/io_scene_importldraw/loadldraw/loadldraw.py' and in setupInstructionsLook() add `return` statement
-before `render.alpha_mode = 'TRANSPARENT'`.
-
 ![grid of various parts in line art style](docs/instructions.png)
 
 # Setup
