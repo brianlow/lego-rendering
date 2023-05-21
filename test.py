@@ -10,7 +10,7 @@ sys.path.insert(0, dir_path)
 
 from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look
-from lib.colors import Color
+from lib.colors import RebrickableColors
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -19,10 +19,10 @@ options = RenderOptions(
     blender_filename = "renders/test.blend",
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
-    light_angle = 210,
-    # part_color = Color.ORANGE.value,
-    part_color = (1.000, .223, 0, 1),  # Pantone orange
+    light_angle = 0,
+    part_color = RebrickableColors.Orange.value.bartneck_blender,
     part_rotation=(0, 0, 0),
+    camera_height=80,
     zoom=0.6,
     look=Look.NORMAL,
     render_width=244,

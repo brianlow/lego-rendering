@@ -1,7 +1,7 @@
 import bpy
 import os
 from math import radians
-from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color
+from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin
 from lib.renderer.lighting import setup_lighting
 
 # Render Lego parts
@@ -52,9 +52,12 @@ class Renderer:
         # after importing so would need to do it again anyways.
         part.select_set(True)
         camera.data.type = 'PERSP' # I prefer perspective even for instructions
-        camera.data.lens = 200 # Long focal length so perspective is minor
+        camera.data.lens = 120 # Long focal length so perspective is minor
+        set_height_by_angle(camera, options.camera_height)
+        aim_towards_origin(camera)
         bpy.ops.view3d.camera_to_view_selected()
         zoom_camera(camera, options.zoom)
+
 
         # Render
         bpy.context.scene.render.filepath = options.image_filename

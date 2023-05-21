@@ -1,3 +1,4 @@
+import os
 from PIL import Image
 
 # Combine PIL images into a grid
@@ -18,3 +19,9 @@ def grid(images, rows=1, cols=1):
         new_image.paste(img, (col * width, row * height))
 
     return new_image
+
+def get_default_font():
+    if os.name == 'nt':  # Windows
+        return 'arial.ttf'
+    elif os.name == 'posix':  # Linux or Mac
+        return '/Library/Fonts/Arial.ttf'

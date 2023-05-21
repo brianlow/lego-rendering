@@ -3,7 +3,7 @@ import math
 from mathutils import Vector, Matrix
 
 from lib.renderer.render_options import LightingStyle
-from lib.renderer.utils import rotate_around_z_origin, aim_towards_origin
+from lib.renderer.utils import rotate_around_z_origin, aim_towards_origin, set_height_by_angle
 
 
 def setup_lighting(options):
@@ -14,9 +14,9 @@ def setup_lighting(options):
 
 def default_lighting(options):
     light_data = bpy.data.lights.new(name="KeyLight", type='AREA')
-    light_data.energy = 400
+    light_data.energy = 300
     light_data.shape = 'SQUARE'
-    light_data.size = 7
+    light_data.size = 5
     light_data.color = (1, 1, 1)
     light = bpy.data.objects.new(name="KeyLight", object_data=light_data)
     bpy.context.collection.objects.link(light)
@@ -65,19 +65,3 @@ def move_object_away_from_origin(obj, distance):
 
     # Set the objects's location to the new location
     obj.location = new_location
-
-
-def set_height_by_angle(light, angle_in_degrees):
-    # convert the angle to radians
-    angle_in_radians = math.radians(angle_in_degrees)
-
-    # calculate the distance to the origin
-    distance_to_origin = light.location.length
-
-    # calculate the new height and distance in the ground plane
-    new_height = math.sin(angle_in_radians) * distance_to_origin
-    new_ground_distance = math.cos(angle_in_radians) * distance_to_origin
-
-    # set the new height, maintaining the same rotation around the Z axis
-    light.location.z = new_height
-    light.location.xy = light.location.xy.normalized() * new_ground_distance

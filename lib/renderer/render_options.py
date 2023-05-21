@@ -24,6 +24,7 @@ class RenderOptions:
                  light_angle = 210,         # angle of the light rotated around the z-axis, 0 - 360
                  part_color = (0.788, 0.102, 0.035, 1),        # color of the part, RGBA tuple (0 - 1.0)
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
+                 camera_height = 45,        # height of the camera as degrees above the ground plane, 0 - 180
                  zoom = 0.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
                  look = Look.NORMAL         # normal (realistic) or instructions (line art)
                  ):
@@ -36,6 +37,7 @@ class RenderOptions:
         self.light_angle = light_angle
         self.part_color = part_color
         self.part_rotation = part_rotation
+        self.camera_height = camera_height
         self.zoom = zoom
         self.look = look
 

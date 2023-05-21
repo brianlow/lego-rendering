@@ -1,7 +1,7 @@
 import os
 import bpy
 import random
-from math import radians
+from math import radians, sin, cos
 from mathutils import Vector, Matrix
 import glob
 
@@ -37,9 +37,23 @@ def aim_towards_origin(object):
 def clamp(x, minimum, maximum):
     return max(minimum, min(x, maximum))
 
+def set_height_by_angle(object, angle_in_degrees):
+    # convert the angle to radians
+    angle_in_radians = radians(angle_in_degrees)
+
+    # calculate the distance to the origin
+    distance_to_origin = object.location.length
+
+    # calculate the new height and distance in the ground plane
+    new_height = sin(angle_in_radians) * distance_to_origin
+    new_ground_distance = cos(angle_in_radians) * distance_to_origin
+
+    # set the new height, maintaining the same rotation around the Z axis
+    object.location.z = new_height
+    object.location.xy = object.location.xy.normalized() * new_ground_distance
+
+
 # https://blender.stackexchange.com/a/158236
-
-
 def get_2d_bounding_box(obj, camera):
     """
     Returns camera space bounding box of mesh object.
