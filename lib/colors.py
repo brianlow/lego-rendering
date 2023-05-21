@@ -26,7 +26,7 @@ class RebrickableColor:
     # However they are only available in for the main Lego color
     @property
     def blender(self):
-        self.bartneck_blender or self.rebrickable_blender
+        return self.bartneck_blender or self.rebrickable_blender
 
     def _hex_to_rgb(self, hex_str):
         # Ensure the hex string starts with #

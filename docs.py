@@ -11,7 +11,7 @@ print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
 from lib.image_utils import grid
-from lib.colors import Color
+from lib.colors import RebrickableColors
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look
 from lib.renderer.renderer import Renderer
 
@@ -22,7 +22,7 @@ default_options = RenderOptions(
     blender_filename="renders/test.blend",
     quality=Quality.NORMAL,
     lighting_style=LightingStyle.DEFAULT,
-    part_color=Color.BLUE.value,
+    part_color=RebrickableColors.MediumBlue.value.blender,
     zoom=0.6,
     part_rotation=(0, 0, 0),
 )
@@ -41,17 +41,24 @@ image = grid(images, 2, 5)
 image.save("docs/parts.png")
 
 colors = [
-    Color.BRIGHT_LIGHT_ORANGE, Color.YELLOW, Color.ORANGE, Color.DARK_ORANGE, Color.RED,
-    Color.BRIGHT_PINK, Color.DARK_PINK, Color.MAGENTA, Color.LAVENDER, Color.MEDIUM_LAVENDER,
+    RebrickableColors.BrightLightYellow,
+    RebrickableColors.Yellow,
+    RebrickableColors.BrightLightOrange,
+    RebrickableColors.Lavender,
+    RebrickableColors.MediumLavender,
+    RebrickableColors.DarkPurple,
+    RebrickableColors.BrightPink,
+    RebrickableColors.DarkPink,
+    RebrickableColors.Magenta,
 ]
 for i, color in enumerate(colors):
     options = copy(default_options)
     options.image_filename = f"renders/docs{i}.png"
-    options.part_color = color.value
+    options.part_color = color.value.blender
     renderer.render_part("3001", options)
 
 images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(colors)]
-image = grid(images, 2, 5)
+image = grid(images, 3, 3)
 image.save("docs/colors.png")
 
 lighting_styles = [
@@ -107,7 +114,7 @@ image.save("docs/zooms.png")
 for i, part in enumerate(parts):
     options = copy(default_options)
     options.image_filename = f"renders/docs{i}.png"
-    options.part_color = Color.WHITE.value
+    options.part_color = RebrickableColors.White.value.blender
     options.look = Look.INSTRUCTIONS
     options.quality = Quality.DRAFT # cleaner without LEGO on studs
     renderer.render_part(part, options)
