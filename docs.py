@@ -62,7 +62,7 @@ image = grid(images, 3, 3)
 image.save("docs/colors.png")
 
 lighting_styles = [
-    LightingStyle.DEFAULT, LightingStyle.HARD
+    LightingStyle.DEFAULT, LightingStyle.BRIGHT, LightingStyle.HARD
 ]
 for i, lighting_style in enumerate(lighting_styles):
     options = copy(default_options)

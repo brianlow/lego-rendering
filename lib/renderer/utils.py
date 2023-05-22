@@ -164,23 +164,10 @@ def zoom_camera(camera, percentage):
     camera.location += scaled_vector
 
 
-# Unused?
-# def reset_scene():
-#     # Create a new scene with default settings
-#     new_scene = bpy.data.scenes.new("New Scene")
-#
-#     # Set the new scene as the active scene
-#     bpy.context.window.scene = new_scene
-#
-#     # Delete the old scene
-#     bpy.data.scenes.remove(bpy.context.scene)
-
-
 def change_object_color(obj, new_color, options):
-    # This is very specific to how ImportLdraw creates the matieral
-    # so will be someone fragile
-    material_name = "MatInst_4" if options.instructions else "Material_4_c"
-    bpy.data.materials[material_name].node_tree.nodes["Group"].inputs[0].default_value = new_color
+    # This is really tied to how the ImportLDraw addon creates the materials
+    material = obj.data.materials[0]
+    material.node_tree.nodes["Group"].inputs[0].default_value = new_color
     return
 
 

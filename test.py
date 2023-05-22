@@ -19,13 +19,14 @@ options = RenderOptions(
     blender_filename = "renders/test.blend",
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
-    light_angle = 0,
-    part_color = RebrickableColors.Lavender.value.bartneck_blender,
+    light_angle = 160,
+    part_color = RebrickableColors.TransLightBlue.value.blender,
+    part_transparent = RebrickableColors.TransLightBlue.value.is_transparent,
     part_rotation=(0, 0, 0),
     camera_height=45,
     zoom=0.6,
-    look=Look.INSTRUCTIONS,
+    look=Look.NORMAL,
     render_width=244,
     render_height=244,
 )
-renderer.render_part("3001", options)
+renderer.render_part("4176", options)

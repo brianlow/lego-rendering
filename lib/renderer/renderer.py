@@ -1,5 +1,6 @@
 import bpy
 import os
+import tempfile
 from math import radians
 from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin
 from lib.renderer.lighting import setup_lighting
@@ -18,13 +19,13 @@ class Renderer:
         if ldraw_part_id != self.current_ldraw_part_id:
             self.import_part(ldraw_part_id, options)
 
-        part = bpy.data.objects[0]
+        part = bpy.data.objects[0].children[0]
         camera = bpy.data.objects['Camera']
 
         # Do this after import b/c the importer overwrites some of these settings
         bpy.context.scene.render.engine = 'CYCLES'
         bpy.context.scene.cycles.samples = options.render_samples
-        bpy.context.scene.cycles.max_bounces = 2
+        bpy.context.scene.cycles.max_bounces = 15 if options.part_transparent else 2
         bpy.context.scene.render.resolution_x = options.render_width
         bpy.context.scene.render.resolution_y = options.render_height
         bpy.context.scene.render.film_transparent = options.transparent_background
@@ -32,7 +33,7 @@ class Renderer:
         bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = 0 # turn off ambient lighting
 
         rotation = options.part_rotation_radian
-        rotation = (rotation[0], rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
+        rotation = (rotation[0]+ radians(270), rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
         part.rotation_euler = rotation
         place_object_on_ground(part)
         change_object_color(part, options.part_color, options)
@@ -76,9 +77,30 @@ class Renderer:
             if not os.path.exists(part_filename):
                 raise FileNotFoundError(f"Part file not found: {part_filename}")
 
+        ldraw_color = 1  # use any LDraw opaque color b/c we will change the color later
+        if options.part_transparent:
+            ldraw_color = 36 # use any LDraw transparent color b/c we will change the color later
+
+        name = ""
+        with tempfile.NamedTemporaryFile(suffix=".ldr", mode='w+', delete=False) as temp:
+            temp.write("0 Untitled Model\n")
+            temp.write("0 Name:  UntitledModel\n")
+            temp.write("0 Author:\n")
+            temp.write("0 CustomBrick\n")
+            temp.write(f"1 {ldraw_color} 30.000000 -24.000000 -20.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 {ldraw_part_id}.dat\n")
+
+            #temp.write(f"1 {ldraw_color} 1 0 0 1 0 0 0 1 0 0 0 1 {ldraw_part_id}.dat")
+            name = temp.name
+
+        with open(name, 'r') as file:
+            data = file.read()
+            print("-----")
+            print(data)
+            print("-----")
+
         # Import the part into the scene
         # https://github.com/TobyLobster/ImportLDraw/blob/09dd286d294672c816d33e70ac10146beb69693c/importldraw.py
-        bpy.ops.import_scene.importldraw(filepath=part_filename, **{
+        bpy.ops.import_scene.importldraw(filepath=name, **{
             "ldrawPath": os.path.abspath(self.ldraw_path),
             "addEnvironment": True,                  # add a white ground plane
             "resPrims": options.res_prisms,          # high resolution primitives
@@ -87,6 +109,7 @@ class Renderer:
         })
 
         bpy.ops.object.select_all(action='DESELECT')
+        os.remove(name)
 
     def clear_scene(self):
         bpy.ops.object.select_all(action='DESELECT')

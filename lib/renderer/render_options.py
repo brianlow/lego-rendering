@@ -7,6 +7,7 @@ class Quality(Enum):
 
 class LightingStyle(Enum):
     DEFAULT = 'default'
+    BRIGHT = 'bright'
     HARD = 'hard'
 
 class Look(Enum):
@@ -23,6 +24,7 @@ class RenderOptions:
                  lighting_style = LightingStyle.DEFAULT, # default, soft, hard
                  light_angle = 210,         # angle of the light rotated around the z-axis, 0 - 360
                  part_color = (0.788, 0.102, 0.035, 1),        # color of the part, RGBA tuple (0 - 1.0)
+                 part_transparent = False,  # True for a transparent part, False for opaque
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
                  camera_height = 45,        # height of the camera as degrees above the ground plane, 0 - 180
                  zoom = 1.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
@@ -36,6 +38,7 @@ class RenderOptions:
         self.lighting_style = lighting_style
         self.light_angle = light_angle
         self.part_color = part_color
+        self.part_transparent = part_transparent
         self.part_rotation = part_rotation
         self.camera_height = camera_height
         self.zoom = zoom

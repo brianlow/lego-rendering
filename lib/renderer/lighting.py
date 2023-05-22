@@ -1,6 +1,6 @@
 import bpy
 import math
-from mathutils import Vector, Matrix
+from mathutils import Vector
 
 from lib.renderer.render_options import LightingStyle
 from lib.renderer.utils import rotate_around_z_origin, aim_towards_origin, set_height_by_angle
@@ -9,6 +9,8 @@ from lib.renderer.utils import rotate_around_z_origin, aim_towards_origin, set_h
 def setup_lighting(options):
     if options.lighting_style == LightingStyle.DEFAULT:
         default_lighting(options)
+    if options.lighting_style == LightingStyle.BRIGHT:
+        bright_lighting(options)
     elif options.lighting_style == LightingStyle.HARD:
         hard_lighting(options)
 
@@ -25,6 +27,11 @@ def default_lighting(options):
     rotate_around_z_origin(light, options.light_angle)
     set_height_by_angle(light, 60)
     aim_towards_origin(light)
+    return light
+
+def bright_lighting(options):
+    light = default_lighting(options)
+    light.data.energy = 550
 
 def hard_lighting(options):
     light_data = bpy.data.lights.new(name="KeyLight", type='AREA')
@@ -39,14 +46,7 @@ def hard_lighting(options):
     rotate_around_z_origin(light, options.light_angle)
     set_height_by_angle(light, 75)
     aim_towards_origin(light)
-
-# Good for rendering white instructional parts
-def bright_lighting(light):
-    move_object_away_from_origin(light, 5)
-    light.data.shadow_soft_size = 0.1
-    light.data.energy = 1
-    bpy.data.scenes['Scene'].view_settings.exposure = 2
-    bpy.data.scenes["Scene"].view_settings.look = 'None'
+    return light
 
 
 def move_object_away_from_origin(obj, distance):
