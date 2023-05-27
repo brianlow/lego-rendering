@@ -42,9 +42,18 @@ class RebrickableColor:
         return (r, g, b, 1)
 
     def _srgb_to_linearrgb(self, c):
-        if   c < 0:       return 0
-        elif c < 0.04045: return c/12.92
-        else:             return ((c+0.055)/1.055)**2.4
+        # Most hex codes are in sRGB which I believe is gamma corrected: adjusted
+        # to compensate for the fact screens emit light in a non-linear fashion.
+        # Blender uses linear RGB: the values are proportional to the amount of light.
+        # So we need to convert. Except for transparent colors, which seem to be
+        # a better representation without any conversion. I don't understand why
+        # which makes me worry I am missing something important.
+        if self.is_transparent:
+            return c
+        else:
+            if   c < 0:       return 0
+            elif c < 0.04045: return c/12.92
+            else:             return ((c+0.055)/1.055)**2.4
 
 
 class RebrickableColors(Enum):
