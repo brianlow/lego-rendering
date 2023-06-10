@@ -14,10 +14,11 @@ from lib.colors import RebrickableColors
 
 renderer = Renderer(ldraw_path="./ldraw")
 
-color = RebrickableColors.TransLightBlue
+color = RebrickableColors.TransClear
 
 options = RenderOptions(
     image_filename = "renders/test.png",
+    bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
@@ -26,9 +27,9 @@ options = RenderOptions(
     part_transparent = color.value.is_transparent,
     part_rotation=(0, 0, 0),
     camera_height=45,
-    zoom=0.6,
+    zoom=0.1,
     look=Look.NORMAL,
     render_width=244,
     render_height=244,
 )
-renderer.render_part("55423", options)
+renderer.render_part("60169", options)

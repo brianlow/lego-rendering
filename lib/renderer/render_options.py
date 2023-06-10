@@ -17,6 +17,7 @@ class Look(Enum):
 class RenderOptions:
     def __init__(self,
                  image_filename,            # output filename
+                 bounding_box_filename,     # optionally, output the bounding box in YOLO format
                  render_width = 224,        # standard Imagenet size
                  render_height = 224,       # standard Imagenet size
                  quality = Quality.NORMAL,  # trade between speed and quality
@@ -34,6 +35,7 @@ class RenderOptions:
         self.render_height = render_height
         self.quality = quality
         self.image_filename = image_filename
+        self.bounding_box_filename = bounding_box_filename
         self.blender_filename = blender_filename
         self.lighting_style = lighting_style
         self.light_angle = light_angle

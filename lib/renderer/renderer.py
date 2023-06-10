@@ -2,7 +2,7 @@ import bpy
 import os
 import tempfile
 from math import radians
-from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin
+from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, bounding_box_to_dataset_format
 from lib.renderer.lighting import setup_lighting
 
 # Render Lego parts
@@ -67,6 +67,14 @@ class Renderer:
         # Save a Blender file so we can debug this script
         if options.blender_filename:
             bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(options.blender_filename))
+
+        # Save the bounding box coordinates in YOLO format
+        if options.bounding_box_filename:
+            bounding_box = get_2d_bounding_box(part, camera)
+            # draw_bounding_box(bounding_box, image_filename)
+            bounding_box = bounding_box_to_dataset_format(bounding_box, options.render_width, options.render_height)
+            with open(options.bounding_box_filename, 'w') as f:
+                f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
 
     def import_part(self, ldraw_part_id, options):
         self.clear_scene()

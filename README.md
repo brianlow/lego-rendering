@@ -59,52 +59,7 @@ Instruction style:
 
 # Run
 ```
-./run.sh test.py
+./run.sh test.py         # renders to renders/test/png
 
 ./run-watch.sh test.py   # run test.py each time a .py file is saved
-```
-
-
-# Old Notes
-
-### Get the dataset onto Paperspace
-
-```
-# zip
-zip -r myzip.zip renders/dataset renders/dataset.yaml
-
-# upload
-aws s3 cp myzip.zip s3://brian-lego-public/myzip.zip
-
-# download
-wget https://brian-lego-public.s3.us-west-1.amazonaws.com/myzip.zip -o myzip.zip
-
-unzip lego-2k-images-10classes.zip
-mv renders lego-2k-images-10classes
-edit the path in dataset.yaml
-cd /notebooks
-pip install -r requirements.txt
-export COMET_API_KEY=...
-python train.py
-```
-
-###  Output format
-
-```
-my_dataset.yml
-my_dataset/
-  train/
-    images/
-      3001_1.png
-      3001_2.png
-    labels/
-      3001_1.txt
-      3001_2.txt
-  val/
-    images/
-      3001_1.png
-      3001_2.png
-    labels/
-      3001_1.txt
-      3001_2.txt
 ```
