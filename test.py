@@ -17,7 +17,7 @@ renderer = Renderer(ldraw_path="./ldraw")
 color = RebrickableColors.TransClear
 
 options = RenderOptions(
-    image_filename = "renders/test.png",
+    image_filename = "renders/test.jpg",
     bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
     quality = Quality.DRAFT,
@@ -32,4 +32,4 @@ options = RenderOptions(
     render_width=244,
     render_height=244,
 )
-renderer.render_part("60169", options)
+renderer.render_part("30541", options)

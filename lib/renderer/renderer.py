@@ -61,6 +61,8 @@ class Renderer:
 
 
         # Render
+        bpy.context.scene.render.image_settings.file_format = 'JPEG'
+        bpy.context.scene.render.image_settings.quality = 90
         bpy.context.scene.render.filepath = options.image_filename
         bpy.ops.render.render(write_still=True)
 
@@ -97,7 +99,6 @@ class Renderer:
             temp.write("0 CustomBrick\n")
             temp.write(f"1 {ldraw_color} 30.000000 -24.000000 -20.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 {ldraw_part_id}.dat\n")
 
-            #temp.write(f"1 {ldraw_color} 1 0 0 1 0 0 0 1 0 0 0 1 {ldraw_part_id}.dat")
             name = temp.name
 
         with open(name, 'r') as file:
