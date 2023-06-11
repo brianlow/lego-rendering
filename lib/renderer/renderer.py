@@ -4,6 +4,8 @@ import tempfile
 from math import radians
 from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, bounding_box_to_dataset_format
 from lib.renderer.lighting import setup_lighting
+from lib.renderer.render_options import Material
+from lib.renderer.ldr_config import LdrConfig
 
 # Render Lego parts
 # This class is responsible for rendering a single image
@@ -14,6 +16,8 @@ class Renderer:
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
         self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
         self.current_ldraw_part_id = None
+        self.ldr_config = LdrConfig(ldraw_path="./ldraw")
+        self.ldr_config.open()
 
     def render_part(self, ldraw_part_id, options):
         if ldraw_part_id != self.current_ldraw_part_id:
@@ -25,7 +29,7 @@ class Renderer:
         # Do this after import b/c the importer overwrites some of these settings
         bpy.context.scene.render.engine = 'CYCLES'
         bpy.context.scene.cycles.samples = options.render_samples
-        bpy.context.scene.cycles.max_bounces = 15 if options.part_transparent else 2
+        bpy.context.scene.cycles.max_bounces = 15 if options.material == Material.TRANSPARENT else 2
         bpy.context.scene.render.resolution_x = options.render_width
         bpy.context.scene.render.resolution_y = options.render_height
         bpy.context.scene.render.film_transparent = options.transparent_background
@@ -36,7 +40,6 @@ class Renderer:
         rotation = (rotation[0]+ radians(270), rotation[1], rotation[2] + radians(90)) # parts feel in a natural orientation with 90 degree z rotation
         part.rotation_euler = rotation
         place_object_on_ground(part)
-        change_object_color(part, options.part_color, options)
 
         setup_lighting(options)
 
@@ -87,9 +90,22 @@ class Renderer:
             if not os.path.exists(part_filename):
                 raise FileNotFoundError(f"Part file not found: {part_filename}")
 
-        ldraw_color = 1  # use any LDraw opaque color b/c we will change the color later
-        if options.part_transparent:
-            ldraw_color = 36 # use any LDraw transparent color b/c we will change the color later
+        # Set the part color
+        #
+        # Colors are tricky because:
+        #   - the importer uses the LDraw color to determine color AND material (e.g. transparent)
+        #   - a part may have multiple materials (slopes 3039) and colors (hinged attenna 73587p01)
+        #   - I want to use my own colors that I've found to be more accurate for rendering
+        # To do this we pick a LDraw color that matches the material we want
+        # and then change the color in the LDraw config
+        ldraw_color = 1
+        if options.material == Material.TRANSPARENT:
+            ldraw_color = 36
+        if options.material == Material.RUBBER:
+            ldraw_color = 256
+
+        self.ldr_config.change_color(ldraw_color, options.part_color.replace("#", ""))
+        self.ldr_config.save()
 
         name = ""
         with tempfile.NamedTemporaryFile(suffix=".ldr", mode='w+', delete=False) as temp:
@@ -115,6 +131,7 @@ class Renderer:
             "resPrims": options.res_prisms,          # high resolution primitives
             "useLogoStuds": options.use_logo_studs,  # LEGO logo on studs
             "look": options.look.value,              # normal (realistic) or instructions (line art)
+            "colourScheme": "ldraw",
         })
 
         bpy.ops.object.select_all(action='DESELECT')

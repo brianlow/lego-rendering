@@ -8,8 +8,8 @@ class RebrickableColor:
     def __init__(self, id, name, rebrickable_hex, bartneck_hex, is_transparent):
        self.id = id
        self.name = name
-       self.rebrickable_hex = rebrickable_hex
-       self.bartneck_hex = bartneck_hex
+       self.rebrickable_hex = self._pad_hex(rebrickable_hex)
+       self.bartneck_hex = self._pad_hex(bartneck_hex)
        self.is_transparent = is_transparent
 
     @property
@@ -23,11 +23,25 @@ class RebrickableColor:
         print(f"Converting {self.bartneck_hex} to RGB")
         return self._hex_to_rgb(self.bartneck_hex)
 
+    @property
+    def best_hex(self):
+        return self.rebrickable_hex or self.bartneck_hex
+
     # Generally the Bartneck colors seem to be more accurate
     # However they are only available in for the main Lego color
     @property
     def blender(self):
         return self.bartneck_blender or self.rebrickable_blender
+
+
+    def _pad_hex(self, hex):
+        if hex is None:
+            return None
+
+        hex = hex.replace("#", "")
+        # left pad string with 0 if shorter 6 characters
+        hex = hex.zfill(6)
+        return f"#{hex}"
 
     def _hex_to_rgb(self, hex_str):
         # Ensure the hex string starts with #
