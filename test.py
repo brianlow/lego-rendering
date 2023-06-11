@@ -12,7 +12,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.TransYellow.value
+color = RebrickableColors.TransClear.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -22,11 +22,11 @@ options = RenderOptions(
     blender_filename = "renders/test.blend",
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
-    light_angle = 270,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
+    light_angle = 160,
     part_rotation=(0, 0, 0),
-    camera_height=70,
+    camera_height=45,
     zoom=0.1,
     look=Look.NORMAL,
     render_width=244,

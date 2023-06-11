@@ -25,6 +25,16 @@ class RebrickableColor:
 
     @property
     def best_hex(self):
+        if self.is_transparent:
+            # Transparent color render more accurately when we
+            # brighten them but apply gamma correction again even
+            # through they are already gamma corrected sRGB
+            rgb = self._parse_hex_string(self.rebrickable_hex)
+            r = self._linear_to_srgb(rgb[0])
+            g = self._linear_to_srgb(rgb[1])
+            b = self._linear_to_srgb(rgb[2])
+            return self._rgb_to_hex((r, g, b))
+
         return self.rebrickable_hex or self.bartneck_hex
 
     # Generally the Bartneck colors seem to be more accurate
@@ -32,7 +42,6 @@ class RebrickableColor:
     @property
     def blender(self):
         return self.bartneck_blender or self.rebrickable_blender
-
 
     def _pad_hex(self, hex):
         if hex is None:
@@ -54,6 +63,30 @@ class RebrickableColor:
         b = self._srgb_to_linearrgb(int(hex_str[5:7], 16) / 255.0)
 
         return (r, g, b, 1)
+
+    # #RRGGBB -> (r, g, b) range 0-1
+    def _parse_hex_string(self, hex_str):
+        # Ensure the hex string starts with #
+        if not hex_str.startswith('#'):
+            hex_str = '#' + hex_str
+
+        # Convert the hex values to integer, and then to floats in range 0-1
+        r = int(hex_str[1:3], 16) / 255.0
+        g = int(hex_str[3:5], 16) / 255.0
+        b = int(hex_str[5:7], 16) / 255.0
+
+        return (r, g, b)
+
+    def _rgb_to_hex(self, rgb):
+        r = int(rgb[0] * 255)
+        g = int(rgb[1] * 255)
+        b = int(rgb[2] * 255)
+        return f"#{r:02x}{g:02x}{b:02x}"
+
+    def _linear_to_srgb(self, c):
+        if c < 0:       return 0
+        elif c < 0.0031308: return c * 12.92
+        else:             return 1.055 * (c**(1/2.4)) - 0.055
 
     def _srgb_to_linearrgb(self, c):
         # Most hex codes are in sRGB which I believe is gamma corrected: adjusted
