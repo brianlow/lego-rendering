@@ -64,8 +64,8 @@ class Renderer:
 
 
         # Render
-        bpy.context.scene.render.image_settings.file_format = 'JPEG'
-        bpy.context.scene.render.image_settings.quality = 90
+        bpy.context.scene.render.image_settings.file_format = options.format.value
+        bpy.context.scene.render.image_settings.quality = 90 # for jpeg
         bpy.context.scene.render.filepath = options.image_filename
         bpy.ops.render.render(write_still=True)
 

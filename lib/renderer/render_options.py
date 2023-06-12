@@ -19,6 +19,10 @@ class Material(Enum):
     TRANSPARENT = 'transparent'
     RUBBER = 'rubber'
 
+class Format(Enum):
+    PNG = 'PNG'
+    JPEG = 'JPEG'
+
 class RenderOptions:
     def __init__(self,
                  image_filename,            # output filename
@@ -34,7 +38,8 @@ class RenderOptions:
                  part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
                  camera_height = 45,        # height of the camera as degrees above the ground plane, 0 - 180
                  zoom = 1.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
-                 look = Look.NORMAL         # normal (realistic) or instructions (line art)
+                 look = Look.NORMAL,         # normal (realistic) or instructions (line art)
+                 format = Format.PNG,        # PNG = lossless, transparent backgrounds, JPG much smaller
                  ):
         self.render_width = render_width
         self.render_height = render_height
@@ -50,6 +55,7 @@ class RenderOptions:
         self.camera_height = camera_height
         self.zoom = zoom
         self.look = look
+        self.format = format
 
     @property
     def draft(self):

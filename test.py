@@ -28,8 +28,8 @@ options = RenderOptions(
     part_rotation=(0, 0, 0),
     camera_height=45,
     zoom=0.1,
-    look=Look.NORMAL,
+    look=Look.INSTRUCTIONS,
     render_width=244,
     render_height=244,
 )
-renderer.render_part("7049a", options)
+renderer.render_part("73587p01", options)
