@@ -25,21 +25,21 @@ class Format(Enum):
 
 class RenderOptions:
     def __init__(self,
-                 image_filename,            # output filename
-                 bounding_box_filename,     # optionally, output the bounding box in YOLO format
-                 render_width = 224,        # standard Imagenet size
-                 render_height = 224,       # standard Imagenet size
-                 quality = Quality.NORMAL,  # trade between speed and quality
-                 blender_filename = None,   # optionally save a .blend file to debug the render
+                 image_filename = "renders/test.png", # output filename
+                 bounding_box_filename = None, # optionally, output the bounding box in YOLO format
+                 render_width = 224,           # standard Imagenet size
+                 render_height = 224,          # standard Imagenet size
+                 quality = Quality.NORMAL,     # trade between speed and quality
+                 blender_filename = None,      # optionally save a .blend file to debug the render
                  lighting_style = LightingStyle.DEFAULT, # default, soft, hard
-                 light_angle = 210,         # angle of the light rotated around the z-axis, 0 - 360
-                 part_color = "#FFFFFF",    # color of the part, hex string
+                 light_angle = 210,            # angle of the light rotated around the z-axis, 0 - 360
+                 part_color = "#FFFFFF",       # color of the part, hex string
                  material = Material.PLASTIC,
-                 part_rotation = (0, 0, 0), # rotation of the part in degrees, xyz tuple
-                 camera_height = 45,        # height of the camera as degrees above the ground plane, 0 - 180
-                 zoom = 1.0,                # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
-                 look = Look.NORMAL,         # normal (realistic) or instructions (line art)
-                 format = Format.PNG,        # PNG = lossless, transparent backgrounds, JPG much smaller
+                 part_rotation = (0, 0, 0),    # rotation of the part in degrees, xyz tuple
+                 camera_height = 45,           # height of the camera as degrees above the ground plane, 0 - 180
+                 zoom = 1.0,                   # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
+                 look = Look.NORMAL,           # normal (realistic) or instructions (line art)
+                 format = Format.PNG,          # PNG = lossless, transparent backgrounds, JPG much smaller
                  ):
         self.render_width = render_width
         self.render_height = render_height

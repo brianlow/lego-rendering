@@ -12,7 +12,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.Blue.value
+color = RebrickableColors.TransYellow.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -25,11 +25,11 @@ options = RenderOptions(
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(0, 0, 0),
+    part_rotation=(0, 0, 270),
     camera_height=45,
     zoom=0.1,
-    look=Look.INSTRUCTIONS,
+    look=Look.NORMAL,
     render_width=244,
     render_height=244,
 )
-renderer.render_part("73587p01", options)
+renderer.render_part("6126b", options)
