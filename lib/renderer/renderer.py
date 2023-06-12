@@ -2,10 +2,11 @@ import bpy
 import os
 import tempfile
 from math import radians
-from lib.renderer.utils import place_object_on_ground, zoom_camera, change_object_color, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, bounding_box_to_dataset_format
+from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, bounding_box_to_dataset_format
 from lib.renderer.lighting import setup_lighting
 from lib.renderer.render_options import Material
 from lib.renderer.ldr_config import LdrConfig
+from io_scene_importldraw.loadldraw.loadldraw import LegoColours, BlenderMaterials, Options
 
 # Render Lego parts
 # This class is responsible for rendering a single image
@@ -15,13 +16,12 @@ class Renderer:
         self.ldraw_path = ldraw_path
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
         self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
-        self.current_ldraw_part_id = None
+        self.has_imported_at_least_once = False
         self.ldr_config = LdrConfig(ldraw_path="./ldraw")
         self.ldr_config.open()
 
     def render_part(self, ldraw_part_id, options):
-        if ldraw_part_id != self.current_ldraw_part_id:
-            self.import_part(ldraw_part_id, options)
+        self.import_part(ldraw_part_id, options)
 
         part = bpy.data.objects[0].children[0]
         camera = bpy.data.objects['Camera']
@@ -136,6 +136,7 @@ class Renderer:
 
         bpy.ops.object.select_all(action='DESELECT')
         os.remove(name)
+        self.has_imported_at_least_once = True
 
     def clear_scene(self):
         bpy.ops.object.select_all(action='DESELECT')
@@ -147,3 +148,14 @@ class Renderer:
 
         # Delete selected objects
         bpy.ops.object.delete()
+
+        # Delete materials because we reuse the same LDraw color
+        # for all renders but change the LDRConfig to change the
+        # rendered color
+        for material in bpy.data.materials:
+            bpy.data.materials.remove(material)
+
+        # Clear caches. For the same reason above (LDRConfig changes)
+        if self.has_imported_at_least_once:
+            LegoColours.reload()
+            BlenderMaterials.clearCache()
