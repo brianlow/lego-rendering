@@ -36,5 +36,5 @@ for i, variant in enumerate(variants):
     ))
 
 images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(variants)]
-image = grid(images, 2, 5)
+image = grid(images, 1, 5)
 image.save("docs/special.png")
