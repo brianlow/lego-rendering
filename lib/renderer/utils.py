@@ -3,7 +3,9 @@ import bpy
 import random
 from math import radians, sin, cos
 from mathutils import Vector, Matrix
+from lib.bounding_box import BoundingBox
 import glob
+from functools import reduce
 
 
 def rotate_object_randomly(obj, min_angle=-360, max_angle=360):
@@ -16,14 +18,18 @@ def place_object_on_ground(obj):
     # Update the object's bounding box data
     bpy.context.view_layer.update()
 
+    # Move the object up so that its lowest point is on the ground plane (Z=0)
+    obj.location.z -= lowest_z(obj)
+
+def lowest_z(obj):
     # Find the lowest point of the object's bounding box
     world_corners = [obj.matrix_world @
                      Vector(corner) for corner in obj.bound_box]
-    lowest_z = min(corner.z for corner in world_corners)
+    lowest = min(corner.z for corner in world_corners)
+    for child in obj.children:
+        lowest = min(lowest, lowest_z(child))
 
-    # Move the object up so that its lowest point is on the ground plane (Z=0)
-    obj.location.z -= lowest_z
-
+    return lowest
 
 def rotate_around_z_origin(object, angle_in_degrees):
     angle_in_radians = radians(angle_in_degrees)
@@ -63,86 +69,78 @@ def get_2d_bounding_box(obj, camera):
     Takes shift-x/y, lens angle and sensor size into account
     as well as perspective/ortho projections.
     """
+    bounding_boxes = [] # bounding box for this part + children
 
-    scene = bpy.context.scene
-    mat = camera.matrix_world.normalized().inverted()
-    depsgraph = bpy.context.evaluated_depsgraph_get()
-    mesh_eval = obj.evaluated_get(depsgraph)
-    me = mesh_eval.to_mesh()
-    me.transform(obj.matrix_world)
-    me.transform(mat)
+    for child in obj.children:
+        bounding_boxes.append(get_2d_bounding_box(child, camera))
 
-    camera = camera.data
-    frame = [-v for v in camera.view_frame(scene=scene)[:3]]
-    camera_persp = camera.type != 'ORTHO'
+    if obj.type == 'MESH':
+        scene = bpy.context.scene
+        mat = camera.matrix_world.normalized().inverted()
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        mesh_eval = obj.evaluated_get(depsgraph)
+        me = mesh_eval.to_mesh()
+        me.transform(obj.matrix_world)
+        me.transform(mat)
 
-    lx = []
-    ly = []
+        camera = camera.data
+        frame = [-v for v in camera.view_frame(scene=scene)[:3]]
+        camera_persp = camera.type != 'ORTHO'
 
-    for v in me.vertices:
-        co_local = v.co
-        z = -co_local.z
+        lx = []
+        ly = []
 
-        if camera_persp:
-            if z == 0.0:
-                lx.append(0.5)
-                ly.append(0.5)
-            # Does it make any sense to drop these?
-            # if z <= 0.0:
-            #    continue
-            else:
-                frame = [(v / (v.z / z)) for v in frame]
+        for v in me.vertices:
+            co_local = v.co
+            z = -co_local.z
 
-        min_x, max_x = frame[1].x, frame[2].x
-        min_y, max_y = frame[0].y, frame[1].y
+            if camera_persp:
+                if z == 0.0:
+                    lx.append(0.5)
+                    ly.append(0.5)
+                # Does it make any sense to drop these?
+                # if z <= 0.0:
+                #    continue
+                else:
+                    frame = [(v / (v.z / z)) for v in frame]
 
-        x = (co_local.x - min_x) / (max_x - min_x)
-        y = (co_local.y - min_y) / (max_y - min_y)
+            min_x, max_x = frame[1].x, frame[2].x
+            min_y, max_y = frame[0].y, frame[1].y
 
-        lx.append(x)
-        ly.append(y)
+            x = (co_local.x - min_x) / (max_x - min_x)
+            y = (co_local.y - min_y) / (max_y - min_y)
 
-    min_x = clamp(min(lx), 0.0, 1.0)
-    max_x = clamp(max(lx), 0.0, 1.0)
-    min_y = clamp(min(ly), 0.0, 1.0)
-    max_y = clamp(max(ly), 0.0, 1.0)
+            lx.append(x)
+            ly.append(y)
 
-    mesh_eval.to_mesh_clear()
+        min_x = clamp(min(lx), 0.0, 1.0)
+        max_x = clamp(max(lx), 0.0, 1.0)
+        min_y = clamp(min(ly), 0.0, 1.0)
+        max_y = clamp(max(ly), 0.0, 1.0)
 
-    r = scene.render
-    fac = r.resolution_percentage * 0.01
-    dim_x = r.resolution_x * fac
-    dim_y = r.resolution_y * fac
+        mesh_eval.to_mesh_clear()
 
-    # Sanity check
-    if round((max_x - min_x) * dim_x) == 0 or round((max_y - min_y) * dim_y) == 0:
-        return (0, 0, 0, 0)
+        r = scene.render
+        fac = r.resolution_percentage * 0.01
+        dim_x = r.resolution_x * fac
+        dim_y = r.resolution_y * fac
 
-    return [
-        (
-            round(min_x * dim_x),            # X
-            round(dim_y - max_y * dim_y),    # Y
-        ), (
-            round(max_x * dim_x),  # X2
-            round(max_y * dim_y)   # Y2
-        )
-    ]
+        # Sanity check
+        if round((max_x - min_x) * dim_x) == 0 or round((max_y - min_y) * dim_y) == 0:
+            return (0, 0, 0, 0)
 
-# Converts from
-#   [(min_x, min_y), (max_x, max_y)] in pixels
-# to
-#   [center_x, center_y, width, height] normalized to 0.0-1.0
-#
+        bounding_boxes.append(BoundingBox.from_xyxy(
+            x1 = round(min_x * dim_x),
+            y1 = round(dim_y - max_y * dim_y),
+            x2 = round(max_x * dim_x),
+            y2 = round(max_y * dim_y),
+        ))
 
+    if len(bounding_boxes) == 0:
+        return None
 
-def bounding_box_to_dataset_format(bounding_box, width, height):
-    [(min_x, min_y), (max_x, max_y)] = bounding_box
-    box_width = max_x - min_x
-    box_height = max_y - min_y
-    center_x = min_x + (box_width / 2)
-    center_y = min_y + (box_height / 2)
-    return [center_x/width, center_y/width, box_width/width, box_height/height]
-
+    # combine all bounding boxes in a single box enclosing all
+    return reduce(lambda a, b: a.combine(b), bounding_boxes)
 
 def draw_bounding_box(bounding_box, input_filename):
     from PIL import Image, ImageDraw
@@ -163,6 +161,10 @@ def zoom_camera(camera, percentage):
     # Move the camera along the scaled vector
     camera.location += scaled_vector
 
+def select_hierarchy(obj):
+    obj.select_set(True)
+    for child in obj.children:
+        select_hierarchy(child)
 
 def change_object_color(obj, new_color, options):
     # This is really tied to how the ImportLDraw addon creates the materials

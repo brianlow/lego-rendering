@@ -2,7 +2,7 @@ import bpy
 import os
 import tempfile
 from math import radians
-from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, bounding_box_to_dataset_format
+from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, select_hierarchy
 from lib.renderer.lighting import setup_lighting
 from lib.renderer.render_options import Material
 from lib.renderer.ldr_config import LdrConfig
@@ -54,7 +54,7 @@ class Renderer:
         # Aim and position the camera so the part is centered in the frame.
         # The importer can do this for us but we rotate and move the part
         # after importing so would need to do it again anyways.
-        part.select_set(True)
+        select_hierarchy(part)
         camera.data.type = 'PERSP' # I prefer perspective even for instructions
         camera.data.lens = 120 # Long focal length so perspective is minor
         set_height_by_angle(camera, options.camera_height)
@@ -75,9 +75,7 @@ class Renderer:
 
         # Save the bounding box coordinates in YOLO format
         if options.bounding_box_filename:
-            bounding_box = get_2d_bounding_box(part, camera)
-            # draw_bounding_box(bounding_box, image_filename)
-            bounding_box = bounding_box_to_dataset_format(bounding_box, options.render_width, options.render_height)
+            bounding_box = get_2d_bounding_box(part, camera).to_yolo(options.render_width, options.render_height)
             with open(options.bounding_box_filename, 'w') as f:
                 f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
 
