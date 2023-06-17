@@ -652,7 +652,7 @@ for ldraw_id in ldraw_ids:
       part_rotation=(0, 0, 0),
       zoom=0.8,
       look=Look.INSTRUCTIONS,
-      render_width=150,
-      render_height=150,
+      width=150,
+      height=150,
   )
   renderer.render_part(ldraw_id, options)

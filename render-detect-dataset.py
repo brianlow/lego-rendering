@@ -83,8 +83,8 @@ for i in range(num_images):
         material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
         part_rotation=(random.uniform(0, 360), random.uniform(0, 360), random.uniform(0, 360)),
         camera_height=random.uniform(15, 90),
-        render_width=244,
-        render_height=244,
+        width=244,
+        height=244,
         zoom=0.1,
     )
 

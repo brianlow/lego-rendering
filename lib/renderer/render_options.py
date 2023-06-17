@@ -27,8 +27,8 @@ class RenderOptions:
     def __init__(self,
                  image_filename = "renders/test.png", # output filename
                  bounding_box_filename = None, # optionally, output the bounding box in YOLO format
-                 render_width = 224,           # standard Imagenet size
-                 render_height = 224,          # standard Imagenet size
+                 width = 224,           # standard Imagenet size
+                 height = 224,          # standard Imagenet size
                  quality = Quality.NORMAL,     # trade between speed and quality
                  blender_filename = None,      # optionally save a .blend file to debug the render
                  lighting_style = LightingStyle.DEFAULT, # default, soft, hard
@@ -41,8 +41,8 @@ class RenderOptions:
                  look = Look.NORMAL,           # normal (realistic) or instructions (line art)
                  format = Format.PNG,          # PNG = lossless, transparent backgrounds, JPG much smaller
                  ):
-        self.render_width = render_width
-        self.render_height = render_height
+        self.width = width
+        self.height = height
         self.quality = quality
         self.image_filename = image_filename
         self.bounding_box_filename = bounding_box_filename

@@ -24,7 +24,7 @@ options = RenderOptions(
     part_rotation=(0, 0, 0),
     zoom=0.6,
     look=Look.INSTRUCTIONS,
-    render_width=244,
-    render_height=244,
+    width=244,
+    height=244,
 )
 renderer.render_part("3001", options)

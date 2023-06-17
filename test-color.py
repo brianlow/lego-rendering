@@ -78,8 +78,8 @@ for color_id in color_ids:
         camera_height=70,
         zoom=0.6,
         look=Look.NORMAL,
-        render_width=244,
-        render_height=244,
+        width=244,
+        height=244,
     )
     renderer.render_part("3001", options)
     options.image_filename = f"renders/color-{color.id}-bartneck.png"

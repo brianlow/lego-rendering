@@ -111,8 +111,8 @@ renderer.render_part("6126b", RenderOptions(
     camera_height = 45,
     zoom = 0.1,
     look = Look.NORMAL,
-    render_width = 244,
-    render_height = 244,
+    width = 244,
+    height = 244,
 ))
 
 ```

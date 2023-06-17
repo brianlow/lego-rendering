@@ -30,8 +30,8 @@ class Renderer:
         bpy.context.scene.render.engine = 'CYCLES'
         bpy.context.scene.cycles.samples = options.render_samples
         bpy.context.scene.cycles.max_bounces = 15 if options.material == Material.TRANSPARENT else 2
-        bpy.context.scene.render.resolution_x = options.render_width
-        bpy.context.scene.render.resolution_y = options.render_height
+        bpy.context.scene.render.resolution_x = options.width
+        bpy.context.scene.render.resolution_y = options.height
         bpy.context.scene.render.film_transparent = options.transparent_background
         bpy.context.scene.view_settings.view_transform = 'Standard'
         bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = 0 # turn off ambient lighting
@@ -75,7 +75,7 @@ class Renderer:
 
         # Save the bounding box coordinates in YOLO format
         if options.bounding_box_filename:
-            bounding_box = get_2d_bounding_box(part, camera).to_yolo(options.render_width, options.render_height)
+            bounding_box = get_2d_bounding_box(part, camera).to_yolo(options.width, options.height)
             with open(options.bounding_box_filename, 'w') as f:
                 f.write(f"0 {bounding_box[0]:.3f} {bounding_box[1]:.3f} {bounding_box[2]:.3f} {bounding_box[3]:.3f}\n")
 
