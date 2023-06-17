@@ -43,24 +43,15 @@ weights = [109500,105678,90037,81903,69961,66593,59637,49185,47114,46711,43072,4
 # Number of images to generate
 num_images = 4000
 
-# Percentage of images to assign to the validation set. The remaining for training.
-# Setting this to 0 when experimenting makes it easier to review the results
-percent_val = 0.2
-
 # Draft (1s per image on M1 Pro Mac) or Normal (10s per image on M1 Pro Mac)
 quality = Quality.NORMAL
 
-train_path = f"./renders/{dataset_name}/train"
-val_path = f"./renders/{dataset_name}/val"
-dataset_path = "./renders/dataset"
+dataset_path = f"./renders/{dataset_name}"
 dataset_yaml_path = f"./renders/{dataset_name}.yaml"
 
-os.makedirs(train_path, exist_ok=True)
-os.makedirs(os.path.join(train_path, "images"), exist_ok=True)
-os.makedirs(os.path.join(train_path, "labels"), exist_ok=True)
-os.makedirs(val_path, exist_ok=True)
-os.makedirs(os.path.join(val_path, "images"), exist_ok=True)
-os.makedirs(os.path.join(val_path, "labels"), exist_ok=True)
+os.makedirs(dataset_path, exist_ok=True)
+os.makedirs(os.path.join(dataset_path, "images"), exist_ok=True)
+os.makedirs(os.path.join(dataset_path, "labels"), exist_ok=True)
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -79,9 +70,8 @@ for i in range(num_images):
     color = RebrickableColorsById[color_id]
     ldraw_id = random.choices(ldraw_ids, weights=weights)[0]
 
-    output_path = val_path if random.random() <= percent_val else train_path
-    image_filename = os.path.join(output_path, "images", f"{color_id}_{ldraw_id}_{i}.png")
-    label_filename = os.path.join(output_path, "labels", f"{color_id}_{ldraw_id}_{i}.txt")
+    image_filename = os.path.join(dataset_path, "images", f"{color_id}_{ldraw_id}_{i}.png")
+    label_filename = os.path.join(dataset_path, "labels", f"{color_id}_{ldraw_id}_{i}.txt")
 
     options = RenderOptions(
         image_filename = image_filename,
