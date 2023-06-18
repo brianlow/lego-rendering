@@ -1,6 +1,7 @@
 import bpy
 import os
 import tempfile
+from PIL import Image
 from math import radians
 from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, select_hierarchy
 from lib.renderer.lighting import setup_lighting
@@ -30,8 +31,8 @@ class Renderer:
         bpy.context.scene.render.engine = 'CYCLES'
         bpy.context.scene.cycles.samples = options.render_samples
         bpy.context.scene.cycles.max_bounces = 15 if options.material == Material.TRANSPARENT else 2
-        bpy.context.scene.render.resolution_x = options.width
-        bpy.context.scene.render.resolution_y = options.height
+        bpy.context.scene.render.resolution_x = options.render_width
+        bpy.context.scene.render.resolution_y = options.render_height
         bpy.context.scene.render.film_transparent = options.transparent_background
         bpy.context.scene.view_settings.view_transform = 'Standard'
         bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[1].default_value = 0 # turn off ambient lighting
@@ -68,6 +69,12 @@ class Renderer:
         bpy.context.scene.render.image_settings.quality = 90 # for jpeg
         bpy.context.scene.render.filepath = options.image_filename
         bpy.ops.render.render(write_still=True)
+
+        # Did we render a larger size, if so resize
+        if options.width != options.render_width:
+            image = Image.open(options.image_filename)
+            image.thumbnail((options.width, options.height), Image.LANCZOS)
+            image.save(options.image_filename)
 
         # Save a Blender file so we can debug this script
         if options.blender_filename:

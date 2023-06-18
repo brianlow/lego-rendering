@@ -2,6 +2,7 @@ from enum import Enum
 from math import radians
 
 class Quality(Enum):
+    HIGH = 'high'
     NORMAL = 'normal'
     DRAFT = 'draft'
 
@@ -85,3 +86,11 @@ class RenderOptions:
     @property
     def transparent_background(self):
         return self.instructions
+
+    @property
+    def render_width(self):
+        return self.width * 2 if self.quality == Quality.HIGH else self.width
+
+    @property
+    def render_height(self):
+        return self.height * 2 if self.quality == Quality.HIGH else self.height
