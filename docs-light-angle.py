@@ -22,7 +22,7 @@ light_angles = [0, 60, 120, 180, 240]
 for i, angle in enumerate(light_angles):
     renderer.render_part("3003", RenderOptions(
         image_filename = f"renders/docs{i}.png",
-        quality=Quality.NORMAL,
+        quality=Quality.HIGH,
         light_angle = angle,
         part_color=RebrickableColors.MediumAzure.value.best_hex,
         zoom=0.6,

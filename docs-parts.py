@@ -67,17 +67,36 @@ variants = [
         part_color = RebrickableColors.DarkBluishGray.value.best_hex,
         part_rotation = (90, 0, 0),
         light_angle=-90,
-        camera_height=85,
+    )),
+    ("73587p01", RenderOptions(
+        part_color = RebrickableColors.Blue.value.best_hex,
+        part_rotation = (0, 0, 0),
+    )),
+    ("7049b", RenderOptions(
+        part_color = RebrickableColors.LightBluishGray.value.best_hex,
+        part_rotation = (0, 0, 0),
+    )),
+    ("3040", RenderOptions(
+        part_color = RebrickableColors.Red.value.best_hex,
+        part_rotation = (0, 0, -90),
+    )),
+    ("98138p0b", RenderOptions(
+        part_color = RebrickableColors.White.value.best_hex,
+        part_rotation = (0, 0, 180),
+    )),
+    ("3039p23", RenderOptions(
+        part_color = RebrickableColors.Blue.value.best_hex,
+        part_rotation = (0, 0, -90),
     )),
 ]
 
 for i, variant in enumerate(variants):
     options = variant[1]
     options.image_filename = f"renders/docs{i}.png"
-    options.quality = Quality.NORMAL
+    options.quality = Quality.HIGH
     options.zoom = 0.6
     renderer.render_part(variant[0], options)
 
 images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(variants)]
-image = grid(images, 2, 5)
+image = grid(images, 3, 5)
 image.save("docs/parts.png")

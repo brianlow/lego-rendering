@@ -62,16 +62,6 @@ Camera zoom
 ![grid of various zoom levels](docs/zooms.png)
 
 
-## Special Parts
-
-Various parts that have caused trouble. Partially here so I know they continue to work.
-* Slopes: have a textured material on the slope
-* Multi-part / multi-mesh parts
-* Patterns
-
-![grid of special parts](docs/special.png)
-
-
 ## Instruction Look
 
 By default they are rendered with a transparent background. Use PNG format (`format=Format.PNG`).

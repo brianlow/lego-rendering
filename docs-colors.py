@@ -19,7 +19,7 @@ renderer = Renderer(ldraw_path="./ldraw")
 
 default_options = RenderOptions(
     image_filename="renders/test.png",
-    quality=Quality.NORMAL,
+    quality=Quality.HIGH,
     lighting_style=LightingStyle.DEFAULT,
     material = Material.PLASTIC,
     zoom=0.6,

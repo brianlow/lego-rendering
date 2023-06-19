@@ -24,7 +24,7 @@ lighting_styles = [
 for i, lighting_style in enumerate(lighting_styles):
     options = RenderOptions(
         image_filename = f"renders/docs{i}.png",
-        quality=Quality.NORMAL,
+        quality=Quality.HIGH,
         lighting_style = lighting_style,
         part_color=RebrickableColors.Green.value.best_hex,
         zoom=0.6,

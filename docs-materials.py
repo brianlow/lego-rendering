@@ -19,7 +19,7 @@ renderer = Renderer(ldraw_path="./ldraw")
 
 default_options = RenderOptions(
     image_filename="renders/test.png",
-    quality=Quality.NORMAL,
+    quality=Quality.HIGH,
     lighting_style=LightingStyle.DEFAULT,
     light_angle = 160,
     part_color=RebrickableColors.MediumBlue.value.best_hex,

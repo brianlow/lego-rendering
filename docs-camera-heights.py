@@ -22,7 +22,7 @@ heights = [10, 30, 50, 70, 85]
 for i, height in enumerate(heights):
     renderer.render_part("32184", RenderOptions(
         image_filename = f"renders/docs{i}.png",
-        quality=Quality.NORMAL,
+        quality=Quality.HIGH,
         part_color=RebrickableColors.LightBluishGray.value.best_hex,
         camera_height=height,
         zoom=0.6,
