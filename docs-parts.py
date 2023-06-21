@@ -26,6 +26,7 @@ variants = [
         part_color = RebrickableColors.Yellow.value.best_hex,
         part_rotation = (0, 0, -45),
         camera_height = 15,
+        quality = Quality.DRAFT, # an incorrect seam is rendered at higher quality, not sure why
     )),
     ("11212", RenderOptions(
         part_color = RebrickableColors.Green.value.best_hex,
@@ -93,7 +94,7 @@ variants = [
 for i, variant in enumerate(variants):
     options = variant[1]
     options.image_filename = f"renders/docs{i}.png"
-    options.quality = Quality.HIGH
+    options.quality = options.quality or Quality.HIGH
     options.zoom = 0.6
     renderer.render_part(variant[0], options)
 
