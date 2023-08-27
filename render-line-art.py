@@ -9,8 +9,8 @@ print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
 from lib.renderer.renderer import Renderer
-from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look
-from lib.colors import Color
+from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Format
+from lib.colors import RebrickableColors
 
 # This is a list of LDraw parts for parts in the 447 dataset
 # I am using to train a classifier. It includes every mold variation
@@ -643,12 +643,19 @@ os.makedirs(RENDER_DIR, exist_ok=True)
 renderer = Renderer(ldraw_path="./ldraw")
 
 for ldraw_id in ldraw_ids:
+  filename = f"{RENDER_DIR}/{ldraw_id}.png"
+  if os.path.exists(filename):
+    print(f"------ Skipping {ldraw_id}, already exists")
+    continue
+
+  print(f"------ Rendering {ldraw_id}...")
   options = RenderOptions(
-      image_filename = f"{RENDER_DIR}/{ldraw_id}.png",
+      image_filename = filename,
+      format = Format.PNG,
       blender_filename = None,
       quality = Quality.DRAFT,
       lighting_style = LightingStyle.BRIGHT,
-      part_color = Color.WHITE.value,
+      part_color = RebrickableColors.White.value.best_hex,
       part_rotation=(0, 0, 0),
       zoom=0.8,
       look=Look.INSTRUCTIONS,
