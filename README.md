@@ -79,10 +79,13 @@ By default they are rendered with a transparent background. Use PNG format (`for
 - [LDraw unofficial parts](https://library.ldraw.org/tracker)
   - download all Unofficial Files
   - extract into ./ldraw/unofficial, e.g. ./ldraw/unofficial/parts/22388.dat
+- Your terminal needs Full Disk Access (to install Pillow in Blender.app) :(
 - Run
     ```
     ./setup.sh
     ```
+- Run Blender -> Edit -> Preferences -> Adds Ons -> Import LDraw -> check it to enable (can we script this?)
+
 
 ## Run
 

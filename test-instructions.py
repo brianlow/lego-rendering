@@ -10,7 +10,6 @@ sys.path.insert(0, dir_path)
 
 from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look
-from lib.colors import Color
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -20,9 +19,9 @@ options = RenderOptions(
     quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
     light_angle = 210,
-    part_color = (1, 1, 1, 1),
+    part_color = "#FFFFFF",
     part_rotation=(0, 0, 0),
-    zoom=0.6,
+    zoom=1,
     look=Look.INSTRUCTIONS,
     width=244,
     height=244,
