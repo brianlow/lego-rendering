@@ -2,8 +2,10 @@
 
 set -e
 
+export BLENDER_VERSION=4.3
+
 /Applications/Blender.app/Contents/MacOS/Blender --background --python ./setup.py
 
-cd /Applications/Blender.app/Contents/Resources/3.5/python/bin
+cd /Applications/Blender.app/Contents/Resources/${BLENDER_VERSION}/python/bin
 
-./python3.10 -m pip install pillow
+./python3.11 -m pip install pillow
