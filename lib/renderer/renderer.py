@@ -162,5 +162,5 @@ class Renderer:
 
         # Clear caches. For the same reason above (LDRConfig changes)
         if self.has_imported_at_least_once:
-            LegoColours.reload()
+            LegoColours()
             BlenderMaterials.clearCache()
