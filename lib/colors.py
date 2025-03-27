@@ -337,6 +337,10 @@ def random_color_for_pil():
   color = random_color_for_blender()
   return (int(color[0] * 255), int(color[1] * 255), int(color[2] * 255))
 
+def random_color_from_ids(ids):
+    id = random.choice(ids)
+    return RebrickableColorsById[id]
+
 # hsv in floats (0-1), rgb in ints (0-255)
 def hsv2rgb(h,s,v):
     return tuple(round(i * 255) for i in colorsys.hsv_to_rgb(h,s,v))
