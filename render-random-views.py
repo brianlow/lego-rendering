@@ -17,6 +17,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Material, RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors, random_color_from_ids
 
+NUM_IMAGES_PER_PART = 5
 csv_file_path = '../lego-inventory/v2.csv'
 
 rows = []
@@ -30,7 +31,7 @@ with open(csv_file_path, mode='r') as csv_file:
         material_id = row['material_id']
         rows.append((canonical_part_num, ldraw_id, color_ids, material_id))
 
-RENDER_DIR ="./renders/standard-views"
+RENDER_DIR ="./renders/random-views"
 os.makedirs(RENDER_DIR, exist_ok=True)
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -48,18 +49,14 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
       format = Format.PNG,
       quality = Quality.DRAFT,
       lighting_style = LightingStyle.DEFAULT,
-      zoom=.99,
       look=Look.NORMAL,
       width=224,
       height=224,
   )
 
   try:
-    views = []
-    views.extend([(0, 0, 45, 10), (0, 0, 45+90, 10), (0, 0, 45+180, 10), (0, 0, 45+270, 10)]) # front, left, back, right
-    views.extend({(0, 0, 0, 90), (180, 0, 0, 90)}) # top, bottom
-    for ((rx, ry, rz, camera_height)) in views:
-      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_{rx}_{ry}_{rz}_{camera_height}.png")
+    for i in range(NUM_IMAGES_PER_PART):
+      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_random{i:02}.png")
       if os.path.exists(image_filename):
         print(f"------ Skipping {image_filename}, already exists")
         continue
@@ -70,8 +67,10 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
 
       options = copy.copy(base_options)
       options.image_filename = image_filename
-      options.part_rotation = (rx, ry, rz)
-      options.camera_height = camera_height
+      options.light_angle = random.uniform(0, 360)
+      options.part_rotation = (random.uniform(0, 360), random.uniform(0, 360), random.uniform(0, 360))
+      options.camera_height = random.uniform(15, 90)
+      options.zoom=random.uniform(.97, 1.0)
       options.part_color = color.best_hex
       options.material = material
       renderer.render_part(ldraw_id, options)
