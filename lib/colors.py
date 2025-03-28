@@ -299,7 +299,7 @@ class RebrickableColors(Enum):
     ReddishGold = RebrickableColor(1065, 'Reddish Gold', '#AC8247', None, False)
     Curry = RebrickableColor(1066, 'Curry', '#DD982E', '#CC8A00', False)
     DarkNougat = RebrickableColor(1067, 'Dark Nougat', '#AD6140', '#B86125', False)
-    ReddishOrange = RebrickableColor(1068, 'Reddish Orange', '#EE5434', '#FF671F', False)
+    BrightReddishOrange = RebrickableColor(1068, 'Bright Reddish Orange', '#EE5434', '#FF671F', False)
     PearlRed = RebrickableColor(1069, 'Pearl Red', '#D60026', None, False)
     PearlBlue = RebrickableColor(1070, 'Pearl Blue', '#0059A3', None, False)
     PearlGreen = RebrickableColor(1071, 'Pearl Green', '#008E3C', None, False)
@@ -328,6 +328,7 @@ class RebrickableColors(Enum):
     TransMediumPurple = RebrickableColor(1094, 'Trans-Medium Purple', '#8D73B3', None, True)
     TransBlack = RebrickableColor(1095, 'Trans-Black', '#635F52', None, True)
     PearlTitanium = RebrickableColor(1103, 'Pearl Titanium', '#3E3C39', None, False)
+    ReddishOrange = RebrickableColor(1136, 'Reddish Orange', '#CA4C0B', None, False)
 
 RebrickableColorsById = {color.value.id: color.value for color in RebrickableColors}
 

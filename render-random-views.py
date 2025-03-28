@@ -46,8 +46,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
     continue
 
   base_options = RenderOptions(
-      format = Format.PNG,
-      quality = Quality.DRAFT,
+      format = Format.JPEG,
       lighting_style = LightingStyle.DEFAULT,
       look=Look.NORMAL,
       width=224,
@@ -56,7 +55,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
 
   try:
     for i in range(NUM_IMAGES_PER_PART):
-      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_random{i:02}.png")
+      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_random{i:02}.jpg")
       if os.path.exists(image_filename):
         print(f"------ Skipping {image_filename}, already exists")
         continue
@@ -67,6 +66,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
       print(f"------ Rendering {image_filename} with color {color.best_hex}...")
       options = copy.copy(base_options)
       options.image_filename = image_filename
+      options.quality = Quality.HIGH if color.is_transparent else Quality.NORMAL
       options.light_angle = random.uniform(0, 360)
       options.part_rotation = (random.uniform(0, 360), random.uniform(0, 360), random.uniform(0, 360))
       options.camera_height = random.uniform(15, 90)
