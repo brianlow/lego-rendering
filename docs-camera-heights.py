@@ -25,7 +25,7 @@ for i, height in enumerate(heights):
         quality=Quality.HIGH,
         part_color=RebrickableColors.LightBluishGray.value.best_hex,
         camera_height=height,
-        zoom=0.6,
+        zoom=0.99,
         part_rotation=(0, 0, 0),
     ))
 

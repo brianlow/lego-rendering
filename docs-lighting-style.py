@@ -27,7 +27,7 @@ for i, lighting_style in enumerate(lighting_styles):
         quality=Quality.DRAFT, # an incorrect seam is rendered at higher quality, not sure why
         lighting_style = lighting_style,
         part_color=RebrickableColors.Green.value.best_hex,
-        zoom=0.6,
+        zoom=0.99,
         part_rotation=(-30, 0, 0),
     )
     renderer.render_part("30367", options)

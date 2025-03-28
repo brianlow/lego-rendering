@@ -95,7 +95,7 @@ for i, variant in enumerate(variants):
     options = variant[1]
     options.image_filename = f"renders/docs{i}.png"
     options.quality = options.quality or Quality.HIGH
-    options.zoom = 0.6
+    options.zoom = 0.99
     renderer.render_part(variant[0], options)
 
 images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(variants)]

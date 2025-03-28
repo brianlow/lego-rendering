@@ -28,7 +28,7 @@ for i, part in enumerate(parts):
         quality = Quality.DRAFT, # clearer look without studs
         look = Look.INSTRUCTIONS,
         part_color = RebrickableColors.LightBluishGray.value.best_hex,
-        zoom = 0.6,
+        zoom = 0.99,
     ))
 
 images = [Image.open(f"renders/docs{i}.png") for i, _ in enumerate(parts)]

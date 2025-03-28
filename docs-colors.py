@@ -22,7 +22,7 @@ default_options = RenderOptions(
     quality=Quality.HIGH,
     lighting_style=LightingStyle.DEFAULT,
     material = Material.PLASTIC,
-    zoom=0.6,
+    zoom=0.99,
     part_rotation=(0, 0, 0),
 )
 

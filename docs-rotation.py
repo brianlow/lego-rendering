@@ -23,7 +23,7 @@ default_options = RenderOptions(
     lighting_style=LightingStyle.DEFAULT,
     part_color=RebrickableColors.MediumLavender.value.best_hex,
     material = Material.PLASTIC,
-    zoom=0.6,
+    zoom=0.99,
     part_rotation=(0, 0, 0),
 )
 

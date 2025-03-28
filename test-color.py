@@ -76,7 +76,7 @@ for color_id in color_ids:
         part_color = color.blender,
         part_rotation=(0, 0, 0),
         camera_height=70,
-        zoom=0.6,
+        zoom=0.99,
         look=Look.NORMAL,
         width=244,
         height=244,

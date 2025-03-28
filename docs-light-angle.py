@@ -25,7 +25,7 @@ for i, angle in enumerate(light_angles):
         quality=Quality.HIGH,
         light_angle = angle,
         part_color=RebrickableColors.MediumAzure.value.best_hex,
-        zoom=0.6,
+        zoom=0.99,
     ))
 
 images = [Image.open(f"renders/docs{i}.png")
