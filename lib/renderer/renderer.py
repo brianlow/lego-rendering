@@ -1,3 +1,4 @@
+import copy
 import bpy
 import os
 import tempfile
@@ -6,8 +7,7 @@ from math import radians
 from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, select_hierarchy
 from lib.renderer.lighting import setup_lighting
 from lib.renderer.render_options import Material
-from lib.renderer.ldr_config import LdrConfig
-from io_scene_importldraw.loadldraw.loadldraw import LegoColours, BlenderMaterials, Options
+from io_scene_importldraw.loadldraw.loadldraw import LegoColours, BlenderMaterials
 
 # Render Lego parts
 # This class is responsible for rendering a single image
@@ -18,8 +18,8 @@ class Renderer:
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
         self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
         self.has_imported_at_least_once = False
-        self.ldr_config = LdrConfig(ldraw_path="./ldraw")
-        self.ldr_config.open()
+        # self.ldr_config = LdrConfig(ldraw_path="./ldraw")
+        # self.ldr_config.open()
 
     def render_part(self, ldraw_part_id, options):
         self.import_part(ldraw_part_id, options)
@@ -95,22 +95,25 @@ class Renderer:
             if not os.path.exists(part_filename):
                 raise FileNotFoundError(f"Part file not found: {part_filename}")
 
+
         # Set the part color
         #
+        # We want to use our own colors that seem to be more realistic. The importer plugin doesn't
+        # support out of the box so we access some internals to create/modify a color reserved for us.
+        #
         # Colors are tricky because:
-        #   - the importer uses the LDraw color to determine color AND material (e.g. transparent)
+        #   - the importer uses the LDraw color to determine color and material (e.g. transparent)
         #   - a part may have multiple materials (slopes 3039) and colors (hinged attenna 73587p01)
-        #   - I want to use my own colors that I've found to be more accurate for rendering
-        # To do this we pick a LDraw color that matches the material we want
-        # and then change the color in the LDraw config
-        ldraw_color = 1
-        if options.material == Material.TRANSPARENT:
-            ldraw_color = 36
-        if options.material == Material.RUBBER:
-            ldraw_color = 256
-
-        self.ldr_config.change_color(ldraw_color, options.part_color.replace("#", ""))
-        self.ldr_config.save()
+        #   - colors are re-read from LDConfig.ldr each time the importer is invoked
+        ldraw_color = 99999
+        linearRGBA = LegoColours.hexDigitsToLinearRGBA(options.part_color.replace('#', ''), 1.0)
+        LegoColours.colours[99999] = {
+            "name": "lego-rendering-placeholder-color",
+            "colour": linearRGBA[0:3],
+            "alpha": 0.5 if options.material == Material.TRANSPARENT else 1,
+            "luminance": 0.0,
+            "material": "RUBBER" if options.material == Material.RUBBER else "BASIC",
+        }
 
         name = ""
         with tempfile.NamedTemporaryFile(suffix=".ldr", mode='w+', delete=False) as temp:

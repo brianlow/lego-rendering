@@ -1,3 +1,5 @@
+import random
+from time import sleep
 import bpy
 import sys
 import os
@@ -12,7 +14,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.MediumAzure.value
+color = RebrickableColors.Purple.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -20,13 +22,13 @@ options = RenderOptions(
     image_filename = "renders/test.png",
     bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
-    quality = Quality.NORMAL,
+    quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(0, 0, 270),
-    camera_height=45,
+    part_rotation=(0, 0, random.uniform(0, 360)),
+    camera_height=90,
     zoom=1,
     look=Look.NORMAL,
     width=244,
