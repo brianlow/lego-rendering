@@ -74,11 +74,11 @@ By default they are rendered with a transparent background. Use PNG format (`for
 - Install [Blender](https://blender.org)
 - Download [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
 - [LDraw parts library](https://library.ldraw.org/updates?latest)
-  - download the complete zip
-  - extract into ./ldraw, e.g. ./ldraw/parts/30010.dat
+  - download and extract
+  - `cp -R ~/Downloads/ldraw ./ldraw`
 - [LDraw unofficial parts](https://library.ldraw.org/tracker)
-  - download all Unofficial Files
-  - extract into ./ldraw/unofficial, e.g. ./ldraw/unofficial/parts/22388.dat
+  - download and extract
+  - `cp -R ~/Downloads/ldrawunf/* ./ldraw/`
 - Your terminal needs Full Disk Access (to install Pillow in Blender.app) :(
 - Run
     ```

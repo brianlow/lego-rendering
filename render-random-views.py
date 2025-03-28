@@ -17,7 +17,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Material, RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors, random_color_from_ids
 
-NUM_IMAGES_PER_PART = 5
+NUM_IMAGES_PER_PART = 50
 csv_file_path = '../lego-inventory/v2.csv'
 
 rows = []
@@ -61,10 +61,10 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
         print(f"------ Skipping {image_filename}, already exists")
         continue
 
-      print(f"------ Rendering {image_filename}...")
       color = random_color_from_ids(color_ids)
       material = Material.TRANSPARENT if color.is_transparent else material_id
 
+      print(f"------ Rendering {image_filename} with color {color.best_hex}...")
       options = copy.copy(base_options)
       options.image_filename = image_filename
       options.light_angle = random.uniform(0, 360)
