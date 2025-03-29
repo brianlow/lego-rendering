@@ -18,7 +18,7 @@ from lib.renderer.render_options import Material, RenderOptions, Quality, Lighti
 from lib.colors import RebrickableColors, random_color_from_ids
 
 NUM_IMAGES_PER_PART = 50
-csv_file_path = '../lego-inventory/v2.csv'
+csv_file_path = '../lego-inventory/v3.csv'
 
 rows = []
 
@@ -66,11 +66,11 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
       print(f"------ Rendering {image_filename} with color {color.best_hex}...")
       options = copy.copy(base_options)
       options.image_filename = image_filename
-      options.quality = Quality.HIGH if color.is_transparent else Quality.NORMAL
+      options.quality = Quality.NORMAL
       options.light_angle = random.uniform(0, 360)
       options.part_rotation = (random.uniform(0, 360), random.uniform(0, 360), random.uniform(0, 360))
       options.camera_height = random.uniform(15, 90)
-      options.zoom=random.uniform(.97, 1.0)
+      options.zoom=random.uniform(.99, 1.0)
       options.part_color = color.best_hex
       options.material = material
       renderer.render_part(ldraw_id, options)
