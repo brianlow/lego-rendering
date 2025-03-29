@@ -45,8 +45,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
     continue
 
   base_options = RenderOptions(
-      format = Format.PNG,
-      quality = Quality.DRAFT,
+      format = Format.JPEG,
       lighting_style = LightingStyle.DEFAULT,
       zoom=.99,
       look=Look.NORMAL,
@@ -59,7 +58,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
     views.extend([(0, 0, 45, 10), (0, 0, 45+90, 10), (0, 0, 45+180, 10), (0, 0, 45+270, 10)]) # front, left, back, right
     views.extend({(0, 0, 0, 90), (180, 0, 0, 90)}) # top, bottom
     for ((rx, ry, rz, camera_height)) in views:
-      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_{rx}_{ry}_{rz}_{camera_height}.png")
+      image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_{rx}_{ry}_{rz}_{camera_height}.jpg")
       if os.path.exists(image_filename):
         print(f"------ Skipping {image_filename}, already exists")
         continue
@@ -70,6 +69,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
 
       options = copy.copy(base_options)
       options.image_filename = image_filename
+      options.quality = Quality.NORMAL
       options.part_rotation = (rx, ry, rz)
       options.camera_height = camera_height
       options.part_color = color.best_hex
