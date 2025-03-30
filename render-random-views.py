@@ -18,6 +18,22 @@ from lib.renderer.render_options import Material, RenderOptions, Quality, Lighti
 from lib.colors import RebrickableColors, random_color_from_ids
 
 NUM_IMAGES_PER_PART = 50
+NUM_IMAGES_OVERRIDES = {
+  "3048a": 250,
+  "43722": 250,
+  "98138pr0027": 250,
+  "98138pr0013": 250,
+  "93095": 250,
+  "53540": 250,
+  "99207": 250,
+  "98138pr0018": 250,
+  "99207": 250,
+  "98138pr0008": 250,
+  "24246": 250,
+  "2432": 250,
+  "98138pr0022": 250,
+  "39739": 250
+}
 csv_file_path = '../lego-inventory/v3.csv'
 
 rows = []
@@ -54,11 +70,16 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
   )
 
   try:
-    for i in range(NUM_IMAGES_PER_PART):
+    num_images = NUM_IMAGES_OVERRIDES[part_num] if part_num in NUM_IMAGES_OVERRIDES else NUM_IMAGES_PER_PART
+    for i in range(num_images):
       image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_random{i:02}.jpg")
-      if os.path.exists(image_filename):
+      label_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_random{i:02}.txt")
+      if os.path.exists(image_filename) and os.path.exists(label_filename):
         print(f"------ Skipping {image_filename}, already exists")
         continue
+      if os.path.exists(image_filename) and not os.path.exists(label_filename):
+        print(f"------ Regenerating {image_filename} with bounding box")
+        os.remove(image_filename)
 
       color = random_color_from_ids(color_ids)
       material = Material.TRANSPARENT if color.is_transparent else material_id
@@ -66,6 +87,7 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
       print(f"------ Rendering {image_filename} with color {color.best_hex}...")
       options = copy.copy(base_options)
       options.image_filename = image_filename
+      options.bounding_box_filename = label_filename
       options.quality = Quality.NORMAL
       options.light_angle = random.uniform(0, 360)
       options.part_rotation = (random.uniform(0, 360), random.uniform(0, 360), random.uniform(0, 360))
