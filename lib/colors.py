@@ -327,8 +327,11 @@ class RebrickableColors(Enum):
     LightLilac = RebrickableColor(1093, 'Light Lilac', '#9195CA', '#9FAEE5', False)
     TransMediumPurple = RebrickableColor(1094, 'Trans-Medium Purple', '#8D73B3', None, True)
     TransBlack = RebrickableColor(1095, 'Trans-Black', '#635F52', None, True)
+    GlitterTransGreeen = RebrickableColor(1098, 'Glitter Trans-Green', '84B68D', None, True)
+    GlitterTransPink = RebrickableColor(1099, 'Glitter Trans-Pink', 'E4ADC8', None, True)
     PearlTitanium = RebrickableColor(1103, 'Pearl Titanium', '#3E3C39', None, False)
     ReddishOrange = RebrickableColor(1136, 'Reddish Orange', '#CA4C0B', None, False)
+    OpalTransYellow = RebrickableColor(1139, 'Opal Trans-Yellow', 'F5CD2F', None, False)
 
 RebrickableColorsById = {color.value.id: color.value for color in RebrickableColors}
 
