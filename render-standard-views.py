@@ -17,7 +17,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Material, RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors, random_color_from_ids
 
-csv_file_path = '../lego-inventory/v3.csv'
+csv_file_path = '../lego-inventory/tag-v4.csv'
 
 rows = []
 
@@ -36,10 +36,6 @@ renderer = Renderer(ldraw_path="./ldraw")
 
 random.shuffle(rows)
 for (part_num, ldraw_id, color_ids, material_id) in rows:
-  if ldraw_id in ("70501a", "109481"):
-    print(f"------ WARNING: Skipping {part_num}, problem with LDraw file")
-    continue
-
   if not ldraw_dat_exists(ldraw_id):
     print(f"------ WARNING: Skipping {part_num}, LDraw file does not exist")
     continue

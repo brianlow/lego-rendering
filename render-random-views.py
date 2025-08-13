@@ -17,7 +17,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Material, RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors, random_color_from_ids
 
-classifed_parts_csv_file = '../lego-inventory/tag-v3.csv'
+classifed_parts_csv_file = '../lego-inventory/tag-v4.csv'
 other_parts_csv_file = '../lego-inventory/sorter-2500.csv'
 RENDER_DIR ="./renders/random-views"
 NUM_IMAGES_PER_CLASSIFED_PART = 50
@@ -54,10 +54,6 @@ def read_csv_file(csv_file_path):
 def calculate_items_to_render(rows, num_images_per_part):
     items = []
     for (part_num, ldraw_id, color_ids, material_id) in rows:
-      if ldraw_id in ("70501a", "109481"):
-        print(f"------ WARNING: Skipping {part_num}, problem with LDraw file")
-        continue
-
       if not ldraw_dat_exists(ldraw_id):
         print(f"------ WARNING: Skipping {part_num}, LDraw file does not exist")
         continue
