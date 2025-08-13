@@ -33,6 +33,9 @@ class RebrickableColor:
             r = self._linear_to_srgb(rgb[0])
             g = self._linear_to_srgb(rgb[1])
             b = self._linear_to_srgb(rgb[2])
+            r = self._linear_to_srgb(r)
+            g = self._linear_to_srgb(g)
+            b = self._linear_to_srgb(b)
             return self._rgb_to_hex((r, g, b))
 
         return self.rebrickable_hex or self.bartneck_hex
@@ -330,6 +333,8 @@ class RebrickableColors(Enum):
     GlitterTransGreeen = RebrickableColor(1098, 'Glitter Trans-Green', '84B68D', None, True)
     GlitterTransPink = RebrickableColor(1099, 'Glitter Trans-Pink', 'E4ADC8', None, True)
     PearlTitanium = RebrickableColor(1103, 'Pearl Titanium', '#3E3C39', None, False)
+    SiennaBrown = RebrickableColor(1137, 'Sienna Brown', '915C3C', None, False)
+    Metal = RebrickableColor(1135, 'Metal','#A5ADB4', None, False)
     ReddishOrange = RebrickableColor(1136, 'Reddish Orange', '#CA4C0B', None, False)
     OpalTransYellow = RebrickableColor(1139, 'Opal Trans-Yellow', 'F5CD2F', None, False)
 
@@ -344,6 +349,9 @@ def random_color_for_pil():
 
 def random_color_from_ids(ids):
     id = random.choice(ids)
+    if id == 9999:
+        ids.remove(9999)
+        id = random.choice(ids)
     return RebrickableColorsById[id]
 
 # hsv in floats (0-1), rgb in ints (0-255)

@@ -2,9 +2,7 @@
 
 set -e
 
-BLENDER_DIR="/Applications/Blender.app"
-BLENDER_RESOURCES_DIR="${BLENDER_DIR}/Contents/Resources"
-BLENDER_EXECUTABLE="${BLENDER_DIR}/Contents/MacOS/Blender"
+BLENDER_RESOURCES_DIR="/Applications/Blender3.app/Contents/Resources"
 
 
 # Find the Blender version directory (e.g., 3.6, 4.0)
@@ -15,20 +13,21 @@ if [ -z "$BLENDER_VERSION" ]; then
 fi
 echo "Detected Blender version: $BLENDER_VERSION"
 
+echo "Running Blender to execute setup.py"
+/Applications/Blender3.app/Contents/MacOS/Blender --background --python ./setup.py
+
+# Change to the Blender Python bin directory
 PYTHON_BIN_DIR="${BLENDER_RESOURCES_DIR}/${BLENDER_VERSION}/python/bin"
+cd "$PYTHON_BIN_DIR"
 
 # Find the python executable (handles variations like python3.10, python3.11 etc.)
 # Use -perm +111 for macOS compatibility instead of -executable
-PYTHON_EXECUTABLE=$(find "$PYTHON_BIN_DIR" -maxdepth 1 -name 'python*' -type f -perm +111 | head -n 1)
+PYTHON_EXECUTABLE=$(find . -maxdepth 1 -name 'python*' -type f -perm +111 | head -n 1)
 if [ -z "$PYTHON_EXECUTABLE" ]; then
   echo "Error: Could not find Python executable in $PYTHON_BIN_DIR"
   exit 1
 fi
 echo "Detected python: $PYTHON_EXECUTABLE"
 
-echo "Running Blender to execute setup.py"
-"$BLENDER_EXECUTABLE" --background --python ./setup.py
-
 # Run pip install using the found python executable
-cd "$PYTHON_BIN_DIR"
 "$PYTHON_EXECUTABLE" -m pip install pillow

@@ -14,15 +14,15 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.TransOrange.value
+color = RebrickableColors.TransLightBlue.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
 options = RenderOptions(
-    image_filename = "renders/test.png",
-    bounding_box_filename = "renders/test.txt",
-    blender_filename = "renders/test.blend",
-    quality = Quality.NORMAL,
+    image_filename = "renders/test-blender4.png",
+    bounding_box_filename = "renders/test-blender4.txt",
+    blender_filename = "renders/test-blender4.blend",
+    quality = Quality.HIGH,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
@@ -31,7 +31,7 @@ options = RenderOptions(
     camera_height=45,
     zoom=0.99,
     look=Look.NORMAL,
-    width=244,
-    height=244,
+    width=350,
+    height=350,
 )
-renderer.render_part("6141", options)
+renderer.render_part("21", options)

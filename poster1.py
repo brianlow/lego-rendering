@@ -11,7 +11,7 @@ print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
 from lib.renderer.renderer import Renderer
-from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
+from lib.renderer.render_options import Format, RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
 color = RebrickableColors.TransOrange.value
@@ -19,19 +19,20 @@ color = RebrickableColors.TransOrange.value
 renderer = Renderer(ldraw_path="./ldraw")
 
 options = RenderOptions(
-    image_filename = "renders/test.png",
-    bounding_box_filename = "renders/test.txt",
-    blender_filename = "renders/test.blend",
-    quality = Quality.NORMAL,
+    format = Format.JPEG,
+    image_filename = "renders/poster1.jpg",
+    bounding_box_filename = "renders/poster1.txt",
+    blender_filename = "renders/poster1.blend",
+    quality = Quality.HIGH,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
     part_rotation=(0, 0, -90),
-    camera_height=45,
-    zoom=0.99,
+    # camera_height=45,
+    zoom=0.60,
     look=Look.NORMAL,
-    width=244,
-    height=244,
+    width=3600,
+    height=3600,
 )
 renderer.render_part("6141", options)
