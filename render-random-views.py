@@ -113,6 +113,8 @@ for (i, options, ldraw_id) in items:
       os.remove(options.image_filename)
 
     print(f"------ Rendering {options.image_filename}...")
+    for attr, value in vars(options).items():
+      print(f"  {attr}: {value}")
     renderer.render_part(ldraw_id, options)
   except Exception as e:
     print(f"------ ERROR: {options.image_filename} failed to render: {e}")

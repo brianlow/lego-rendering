@@ -11,10 +11,10 @@ print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
 from lib.renderer.renderer import Renderer
-from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
+from lib.renderer.render_options import Format, RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.TransOrange.value
+color = RebrickableColors.MediumAzure.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -27,11 +27,11 @@ options = RenderOptions(
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(0, 0, -90),
+    part_rotation=(0, 180, 90),
     camera_height=45,
     zoom=0.99,
     look=Look.NORMAL,
     width=244,
     height=244,
 )
-renderer.render_part("6141", options)
+renderer.render_part("3002", options)

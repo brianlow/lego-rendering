@@ -53,6 +53,8 @@ for (part_num, ldraw_id, color_ids, material_id) in rows:
     views = []
     views.extend([(0, 0, 45, 10), (0, 0, 45+90, 10), (0, 0, 45+180, 10), (0, 0, 45+270, 10)]) # front, left, back, right
     views.extend({(0, 0, 0, 90), (180, 0, 0, 90)}) # top, bottom
+    views.extend({(0, 0, 0, 45), (0, 0, 90, 45), (0, 0, 180, 45), (0, 0, 270, 45)}) # 3/4 top (0_0_0_45 is the home view)
+    views.extend({(0, 180, 0, 45), (0, 180, 90, 45), (0, 180, 180, 45), (0, 180, 270, 45)}) # 3/4 bottom
     for ((rx, ry, rz, camera_height)) in views:
       image_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_{rx}_{ry}_{rz}_{camera_height}.jpg")
       label_filename = os.path.join(RENDER_DIR, str(part_num), f"{part_num}_{rx}_{ry}_{rz}_{camera_height}.txt")
