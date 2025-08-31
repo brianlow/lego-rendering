@@ -25,19 +25,6 @@ class RebrickableColor:
 
     @property
     def best_hex(self):
-        if self.is_transparent:
-            # Transparent color render more accurately when we
-            # brighten them but apply gamma correction again even
-            # through they are already gamma corrected sRGB
-            rgb = self._parse_hex_string(self.rebrickable_hex)
-            r = self._linear_to_srgb(rgb[0])
-            g = self._linear_to_srgb(rgb[1])
-            b = self._linear_to_srgb(rgb[2])
-            r = self._linear_to_srgb(r)
-            g = self._linear_to_srgb(g)
-            b = self._linear_to_srgb(b)
-            return self._rgb_to_hex((r, g, b))
-
         return self.rebrickable_hex or self.bartneck_hex
 
     # Generally the Bartneck colors seem to be more accurate
