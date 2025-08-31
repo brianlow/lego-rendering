@@ -17,7 +17,7 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Material, RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors, random_color_from_ids
 
-csv_file_path = '../lego-inventory/tag-v4.csv'
+csv_file_path = '../lego-inventory/tag-v3.csv'
 
 rows = []
 
