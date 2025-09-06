@@ -27,7 +27,7 @@ for i, part in enumerate(parts):
         image_filename = f"renders/docs{i}.png",
         quality = Quality.NORMAL,
         look = Look.INSTRUCTIONS,
-        part_color = RebrickableColors.White.value.best_hex,
+        part_color = RebrickableColors.LightGray.value.best_hex,
         zoom = 0.99,
     ))
 
