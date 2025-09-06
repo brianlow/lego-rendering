@@ -72,8 +72,7 @@ class RenderOptions:
 
     @property
     def use_logo_studs(self):
-        return False if self.draft else True
-
+        return False if self.draft or self.instructions else True
 
     @property
     def render_samples(self):

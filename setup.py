@@ -2,7 +2,8 @@ import bpy
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 
-bpy.ops.preferences.addon_install(filepath="/Users/brianlow/dev/ImportLDraw/ImportLDraw-v1.2.3.zip") # fixed bevel, should see if in next release
+bpy.ops.preferences.addon_install(filepath="/Users/brianlow/dev/ImportLDraw/ImportLDraw-v1.2.3.zip")
+# bpy.ops.preferences.addon_install(filepath="/Users/brianlow/Downloads/importldraw1.2.2.zip") # good?
 # bpy.ops.preferences.addon_install(filepath="/Users/brianlow/Downloads/importldraw1.2.1.zip") # bad
 # bpy.ops.preferences.addon_install(filepath="/Users/brianlow/Downloads/importldraw1.2.0.zip") # bad
 # bpy.ops.preferences.addon_install(filepath="/Users/brianlow/Downloads/importldraw1.1.18_for_blender_281.zip") # boost - bad

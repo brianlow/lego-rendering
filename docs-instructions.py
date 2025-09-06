@@ -25,9 +25,9 @@ parts = [
 for i, part in enumerate(parts):
     renderer.render_part(part, RenderOptions(
         image_filename = f"renders/docs{i}.png",
-        quality = Quality.DRAFT, # clearer look without studs
+        quality = Quality.NORMAL,
         look = Look.INSTRUCTIONS,
-        part_color = RebrickableColors.LightBluishGray.value.best_hex,
+        part_color = RebrickableColors.White.value.best_hex,
         zoom = 0.99,
     ))
 
