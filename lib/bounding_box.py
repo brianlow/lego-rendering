@@ -179,9 +179,9 @@ class BoundingBox:
         center_x, center_y = self.center
         return [
             center_x/image_width,
-            center_y/image_width,
+            center_y/image_height,
             self.width/image_width,
-            self.height/image_width
+            self.height/image_height
         ]
 
     def __repr__(self):
