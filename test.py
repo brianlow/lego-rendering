@@ -10,11 +10,12 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
+from darken_lines import darken_lines
 from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Format, RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
 
-color = RebrickableColors.MediumAzure.value
+color = RebrickableColors.LightBlue.value
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -27,11 +28,16 @@ options = RenderOptions(
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(0, 180, 90),
-    camera_height=45,
-    zoom=0.99,
-    look=Look.NORMAL,
+    part_rotation=(0, 0, -45),
+    camera_height=20,
+    zoom=1,
+    look=Look.INSTRUCTIONS,
     width=244,
     height=244,
 )
-renderer.render_part("3002", options)
+# renderer.render_part("87087", options)  # 1 stud
+# renderer.render_part("47905", options) # 2 studs, (0, 0, 45)
+# renderer.render_part("26604", options) # 2 studs, adjacent  (0, 0, -90)
+# renderer.render_part("26604", options) # 4 studs (0, 0, 0) height 65
+renderer.render_part("76382p99", options) # 4 studs (0, 0, 0) height 65
+renderer.render_part("76382p99", options) # 4 studs (0, 0, 0) height 65

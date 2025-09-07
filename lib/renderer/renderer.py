@@ -147,21 +147,19 @@ class Renderer:
         self.has_imported_at_least_once = True
 
     def clear_scene(self):
+        # Clear all objects except cameras, lights, and other essentials
+        # Use Blender's batch removal for comprehensive clearing
         bpy.ops.object.select_all(action='DESELECT')
 
-        # Select all objects in the current scene
+        # Select only objects we want to delete (not cameras, lights)
         for obj in bpy.context.scene.objects:
             if obj.type not in {'CAMERA'}:
                 obj.select_set(True)
 
-        # Delete selected objects
-        bpy.ops.object.delete()
+        bpy.ops.object.delete(use_global=False)
 
-        # Delete materials because we reuse the same LDraw color
-        # for all renders but change the LDRConfig to change the
-        # rendered color
-        for material in bpy.data.materials:
-            bpy.data.materials.remove(material)
+        # Clear all unused data blocks (materials, meshes, etc.)
+        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
 
         # Clear caches. For the same reason above (LDRConfig changes)
         if self.has_imported_at_least_once:

@@ -1,3 +1,4 @@
+from random import shuffle
 import bpy
 import sys
 import os
@@ -14,6 +15,15 @@ from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Format
 from lib.colors import RebrickableColors
 
+SPECIAL_VIEWS = {
+   "47905": {"part_rotation": (0, 0, 45), "camera_height": 45},
+   "26604": {"part_rotation": (0, 0, -90), "camera_height": 45},
+   "4733":  {"part_rotation": (0, 0, 0), "camera_height": 65},
+   "52107":  {"part_rotation": (0, 0, 0), "camera_height": 65},
+   "80796":  {"part_rotation": (0, 0, 0), "camera_height": 65},
+   "50305":  {"part_rotation": (0, 0, -90), "camera_height": 45},
+}
+
 csv_file_path = '../lego-inventory/sorter-10000.csv'
 
 ids = []
@@ -25,6 +35,7 @@ with open(csv_file_path, mode='r') as csv_file:
         ldraw_id = row['ldraw_id']
         ids.append((canonical_part_num, ldraw_id))
 
+shuffle(ids)
 
 RENDER_DIR ="./renders/part-library"
 
@@ -33,6 +44,7 @@ os.makedirs(RENDER_DIR, exist_ok=True)
 renderer = Renderer(ldraw_path="./ldraw")
 
 for (part_num, ldraw_id) in ids:
+
   filename = f"{RENDER_DIR}/{part_num}.png"
   if os.path.exists(filename):
     print(f"------ Skipping {part_num}, already exists")
@@ -48,20 +60,28 @@ for (part_num, ldraw_id) in ids:
 
   print(f"------ Rendering {part_num} with LDraw {ldraw_id}...")
   try:
+    camera_height = 45
+    part_rotation = (0, 0, 0)
+    if ldraw_id in SPECIAL_VIEWS:
+        part_rotation = SPECIAL_VIEWS[ldraw_id]["part_rotation"]
+        camera_height = SPECIAL_VIEWS[ldraw_id]["camera_height"]
+
     options = RenderOptions(
         image_filename = filename,
         format = Format.PNG,
         blender_filename = None,
-        quality = Quality.DRAFT,
-        lighting_style = LightingStyle.BRIGHT,
+        quality = Quality.NORMAL,
+        lighting_style = LightingStyle.DEFAULT,
         part_color = RebrickableColors.White.value.best_hex,
-        part_rotation=(0, 0, 0),
+        part_rotation=part_rotation,
+        camera_height=camera_height,
         zoom=1,
         look=Look.INSTRUCTIONS,
-        width=150,
-        height=150,
+        width=224,
+        height=224,
     )
     renderer.render_part(ldraw_id, options)
+
   except Exception as e:
     print(f"------ ERROR: {part_num} failed to render: {e}")
     continue
