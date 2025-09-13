@@ -131,9 +131,9 @@ def get_2d_bounding_box(obj, camera):
 
         bounding_boxes.append(BoundingBox.from_xyxy(
             x1 = round(min_x * dim_x),
-            y1 = round(dim_y - min_y * dim_y),
+            y1 = round(dim_y - max_y * dim_y),
             x2 = round(max_x * dim_x),
-            y2 = round(dim_y - max_y * dim_y),
+            y2 = round(dim_y - min_y * dim_y),
         ))
 
     if len(bounding_boxes) == 0:
