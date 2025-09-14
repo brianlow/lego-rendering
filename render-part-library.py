@@ -22,6 +22,8 @@ SPECIAL_VIEWS = {
    "52107":  {"part_rotation": (0, 0, 0), "camera_height": 65},
    "80796":  {"part_rotation": (0, 0, 0), "camera_height": 65},
    "50305":  {"part_rotation": (0, 0, -90), "camera_height": 45},
+   "2444":  {"part_rotation": (0, 180, 0), "camera_height": 45},
+   "2817":  {"part_rotation": (0, 180, 0), "camera_height": 45},
 }
 
 csv_file_path = '../lego-inventory/sorter-10000.csv'
