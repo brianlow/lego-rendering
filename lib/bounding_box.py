@@ -1,4 +1,4 @@
-from PIL import ImageFont
+from PIL import ImageFont, Image, ImageDraw
 import os
 import hashlib
 import math
@@ -40,6 +40,44 @@ class BoundingBox:
             x2=x2,
             y2=y2,
         )
+
+    @classmethod
+    def from_yolo_string(cls, yolo_string, image_width, image_height):
+        """
+        Parse YOLO format string and convert to pixel coordinates.
+        YOLO format: class_index center_x center_y width height (all normalized 0-1)
+        """
+        parts = yolo_string.strip().split()
+        center_x = float(parts[1])
+        center_y = float(parts[2])
+        width = float(parts[3])
+        height = float(parts[4])
+
+        # Convert normalized coordinates to pixel coordinates
+        x1 = (center_x - width / 2) * image_width
+        y1 = (center_y - height / 2) * image_height
+        x2 = (center_x + width / 2) * image_width
+        y2 = (center_y + height / 2) * image_height
+
+        return cls(x1, y1, x2, y2)
+
+    @staticmethod
+    def annotate(img_filename, bb_filename, color='red', width=2):
+        """
+        Load an image and YOLO bounding box file, draw the box on the image, and save it.
+        """
+        img = Image.open(img_filename)
+        img_width, img_height = img.size
+
+        with open(bb_filename, 'r') as f:
+            yolo_string = f.read()
+
+        bbox = BoundingBox.from_yolo_string(yolo_string, img_width, img_height)
+
+        draw = ImageDraw.Draw(img)
+        bbox.draw(draw, color=color, width=width)
+
+        img.save(img_filename)
 
     # Corners is a 4 element array where each element
     # is a corner [x, y]. This box is most likely a

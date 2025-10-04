@@ -26,5 +26,12 @@ if [ -z "$PYTHON_EXECUTABLE" ]; then
 fi
 echo "Detected python: $PYTHON_EXECUTABLE"
 
-echo "Running Blender to execute unsetup.py"
-"$BLENDER_EXECUTABLE" --background --python ./unsetup.py
+echo "Running Blender uninstall ImportLDraw plugin"
+X="import bpy
+addon_name = 'io_scene_importldraw'
+bpy.ops.preferences.addon_disable(module=addon_name)
+bpy.ops.preferences.addon_remove(module=addon_name)
+bpy.ops.wm.save_userpref()
+"
+"$BLENDER_EXECUTABLE" --background --python-expr "${X}"
+"$BLENDER_EXECUTABLE" --background --python-expr "${X}" # sometime need to run twice to fully uninstall

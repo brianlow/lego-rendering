@@ -1,6 +1,3 @@
-import random
-from time import sleep
-import bpy
 import sys
 import os
 
@@ -10,12 +7,13 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 print(f"Prepending {dir_path} to Python path...")
 sys.path.insert(0, dir_path)
 
-from darken_lines import darken_lines
 from lib.renderer.renderer import Renderer
 from lib.renderer.render_options import Format, RenderOptions, Quality, LightingStyle, Look, Material
 from lib.colors import RebrickableColors
+from lib.bounding_box import BoundingBox
 
-color = RebrickableColors.LightBlue.value
+color = RebrickableColors.MediumAzure.value
+render_bbox = True
 
 renderer = Renderer(ldraw_path="./ldraw")
 
@@ -23,21 +21,21 @@ options = RenderOptions(
     image_filename = "renders/test.png",
     bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
-    quality = Quality.NORMAL,
+    quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(0, 0, -45),
-    camera_height=20,
-    zoom=1,
-    look=Look.INSTRUCTIONS,
+    part_rotation=(50, 90, 90),
+    camera_height=84,
+    zoom=.95,
+    look=Look.NORMAL,
     width=244,
     height=244,
 )
-# renderer.render_part("87087", options)  # 1 stud
-# renderer.render_part("47905", options) # 2 studs, (0, 0, 45)
-# renderer.render_part("26604", options) # 2 studs, adjacent  (0, 0, -90)
-# renderer.render_part("26604", options) # 4 studs (0, 0, 0) height 65
-renderer.render_part("76382p99", options) # 4 studs (0, 0, 0) height 65
-renderer.render_part("76382p99", options) # 4 studs (0, 0, 0) height 65
+
+renderer.render_part("3001", options) # 4 studs (0, 0, 0) height 65
+
+# Draw bounding box on the rendered image
+if render_bbox and options.bounding_box_filename:
+    BoundingBox.annotate(options.image_filename, options.bounding_box_filename)

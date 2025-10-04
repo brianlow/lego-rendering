@@ -2,10 +2,10 @@
 
 set -e
 
+IMPORTLDRAW_ZIP="$(pwd)/importldraw1.2.2.zip"
 BLENDER_DIR="/Applications/Blender.app"
 BLENDER_RESOURCES_DIR="${BLENDER_DIR}/Contents/Resources"
 BLENDER_EXECUTABLE="${BLENDER_DIR}/Contents/MacOS/Blender"
-
 
 # Find the Blender version directory (e.g., 3.6, 4.0)
 BLENDER_VERSION=$(find "$BLENDER_RESOURCES_DIR" -maxdepth 1 -type d -name '[0-9]*.[0-9]*' -print -quit | xargs basename)
@@ -26,9 +26,17 @@ if [ -z "$PYTHON_EXECUTABLE" ]; then
 fi
 echo "Detected python: $PYTHON_EXECUTABLE"
 
-echo "Running Blender to execute setup.py"
-"$BLENDER_EXECUTABLE" --background --python ./setup.py
+
+echo "Install the ImportLDraw plugin"
+X="import bpy
+bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.ops.preferences.addon_install(filepath='${IMPORTLDRAW_ZIP}')
+bpy.ops.preferences.addon_enable(module='io_scene_importldraw')
+bpy.ops.wm.save_userpref()
+"
+"$BLENDER_EXECUTABLE" --background --python-expr "${X}"
 
 # Run pip install using the found python executable
+echo "Install pillow in the Blender Python environment"
 cd "$PYTHON_BIN_DIR"
 "$PYTHON_EXECUTABLE" -m pip install pillow
