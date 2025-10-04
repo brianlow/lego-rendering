@@ -34,7 +34,7 @@ options = RenderOptions(
     height=244,
 )
 
-renderer.render_part("3001", options) # 4 studs (0, 0, 0) height 65
+renderer.render_part("3001", options)
 
 # Draw bounding box on the rendered image
 if render_bbox and options.bounding_box_filename:
