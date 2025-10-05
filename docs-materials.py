@@ -1,19 +1,13 @@
 import sys
-import os
-import random
+import site
 from PIL import Image
 from copy import copy
 
-# This script runs under Blender's python environment. Add the current
-# directly to the path so we can import our own modules
-dir_path = os.path.dirname(os.path.realpath(__file__))
-print(f"Prepending {dir_path} to Python path...")
-sys.path.insert(0, dir_path)
+# Add user site-packages to path so we can import lego_rendering
+sys.path.insert(0, site.getusersitepackages())
 
-from lib.image_utils import grid
-from lib.colors import RebrickableColors
-from lib.renderer.render_options import RenderOptions, Quality, LightingStyle, Look, Material
-from lib.renderer.renderer import Renderer
+from lego_rendering.image_utils import grid
+from lego_rendering import RebrickableColors, RenderOptions, Quality, LightingStyle, Material, Renderer
 
 renderer = Renderer(ldraw_path="./ldraw")
 

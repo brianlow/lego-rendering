@@ -72,19 +72,24 @@ By default they are rendered with a transparent background. Use PNG format (`for
 ## Setup
 
 - Install [Blender](https://blender.org)
-- Download [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
+- [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
+  - download the zip into this folder
 - [LDraw parts library](https://library.ldraw.org/updates?latest)
-  - download and extract
-  - `cp -R ~/Downloads/ldraw ./ldraw`
+  - download and extract to ./ldraw in this folder
 - [LDraw unofficial parts](https://library.ldraw.org/tracker)
-  - download and extract
-  - `cp -R ~/Downloads/ldrawunf/* ./ldraw/`
-- Your terminal needs Full Disk Access (to install Pillow in Blender.app) :(
+  - download and extract to ./ldraw in this folder
+  - be careful that you add files to ./ldraw/parts instead of replacing the folder
+- Your terminal needs Full Disk Access (to install lego_render in Blender.app) :(
 - Run
     ```
     ./setup.sh
     ```
-- Run Blender -> Edit -> Preferences -> Adds Ons -> Import LDraw -> check it to enable (can we script this?)
+- Run Blender -> Edit -> Preferences -> Adds Ons -> Import LDraw -> check it to enable
+
+If you don't want to run setup.sh
+
+- install ImportLDraw into Blender as a normal plugin
+- in the Blender python console run using something [like this](https://stackoverflow.com/a/50255019) to install `lego-rendering` package
 
 
 ## Run
@@ -92,6 +97,9 @@ By default they are rendered with a transparent background. Use PNG format (`for
 Build script:
 
 ```python
+sys.path.insert(0, site.getusersitepackages())
+from lego_rendering import Renderer, RenderOptions, Quality, LightingStyle, Look, Material, RebrickableColors
+
 renderer = Renderer(ldraw_path="./ldraw")
 
 renderer.render_part("6126b", RenderOptions(
@@ -107,10 +115,9 @@ renderer.render_part("6126b", RenderOptions(
     width = 244,
     height = 244,
 ))
-
 ```
 
-See `lib/renderer/render_options.py` for the full list of options. See `docs-*.py` to see how the images on this page were genereated.
+See `lego_renderer/renderer/render_options.py` for the full list of options. See `docs-*.py` to see how the images on this page were genereated.
 
 Run in Blender's Python environment:
 
