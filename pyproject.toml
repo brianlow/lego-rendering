@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lego-rendering"
-version = "0.1.2"
+version = "0.1.3"
 description = "LEGO rendering tools using Blender"
 authors = [{name = "Brian Low", email = "brian@brianlow.com"}]
 readme = "README.md"

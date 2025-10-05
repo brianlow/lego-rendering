@@ -72,25 +72,30 @@ By default they are rendered with a transparent background. Use PNG format (`for
 ## Setup
 
 - Install [Blender](https://blender.org)
-- [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
-  - download the zip into this folder
-- [LDraw parts library](https://library.ldraw.org/updates?latest)
-  - download and extract to ./ldraw in this folder
-- [LDraw unofficial parts](https://library.ldraw.org/tracker)
-  - download and extract to ./ldraw in this folder
-  - be careful that you add files to ./ldraw/parts instead of replacing the folder
-- Your terminal needs Full Disk Access (to install lego_render in Blender.app) :(
-- Run
+- Install [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
+- In your own a folder:
+  - Download [LDraw parts library](https://library.ldraw.org/updates?latest)
+  - `unzip complete.zip`
+  - Download [LDraw unofficial parts](https://library.ldraw.org/tracker)
+  - `unzip -o ldrawunf.zip -d ldraw`
+  - At this point your current folder should look like
     ```
-    ./setup.sh
+    ldraw/
+      parts/
+      p/
+      ...
     ```
-- Run Blender -> Edit -> Preferences -> Adds Ons -> Import LDraw -> check it to enable
+  - In Blender, open the Python Console:
+  ```
+  import subprocess
+  import sys
+  subprocess.check_call([sys.executable, "-m", "pip", "install", "--user", "lego-rendering"])
+  ```
 
-If you don't want to run setup.sh
-
-- install ImportLDraw into Blender as a normal plugin
-- in the Blender python console run using something [like this](https://stackoverflow.com/a/50255019) to install `lego-rendering` package
-
+Alternatively, clone this repo, follow the above steps and run
+```
+./setup.sh
+```
 
 ## Run
 
@@ -125,4 +130,19 @@ Run in Blender's Python environment:
 ./run.sh test.py         # renders to renders/test/png
 
 ./run-watch.sh test.py   # run test.py each time a .py file is saved
+```
+
+## Contributing
+
+```
+# Setup
+uv sync
+
+# Render without publishing a pacakge
+./run.sh test-local.py
+
+# Publish a new version
+# - bump version in pyproject.toml
+uv build
+uv publish
 ```

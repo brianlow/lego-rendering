@@ -16,10 +16,7 @@ class Renderer:
     def __init__(self, ldraw_path = "./ldraw"):
         self.ldraw_path = ldraw_path
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
-        self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
         self.has_imported_at_least_once = False
-        # self.ldr_config = LdrConfig(ldraw_path="./ldraw")
-        # self.ldr_config.open()
 
     def render_part(self, ldraw_part_id, options):
         self.import_part(ldraw_part_id, options)
@@ -91,9 +88,7 @@ class Renderer:
 
         part_filename = os.path.abspath(os.path.join(self.ldraw_parts_path, f"{ldraw_part_id}.dat"))
         if not os.path.exists(part_filename):
-            part_filename = os.path.abspath(os.path.join(self.ldraw_unofficial_parts_path, f"{ldraw_part_id}.dat"))
-            if not os.path.exists(part_filename):
-                raise FileNotFoundError(f"Part file not found: {part_filename}")
+            raise FileNotFoundError(f"Part file not found: {part_filename}")
 
 
         # Set the part color

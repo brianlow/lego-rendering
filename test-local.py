@@ -1,9 +1,13 @@
-import sys
-import site
+# This file is for testing the package without publishing to pypi
 
-# Add user site-packages to path so we can import lego_rendering
-# Alternatively, I think lego_rendering can be installed with sudo and --no-user to avoid this
-sys.path.insert(0, site.getusersitepackages())
+import sys
+import os
+
+# This script runs under Blender's python environment. Add the current
+# directly to the path so we can import our own modules
+dir_path = os.path.dirname(os.path.realpath(__file__))
+print(f"Prepending {dir_path} to Python path...")
+sys.path.insert(0, dir_path)
 from lego_rendering import Renderer, RenderOptions, Quality, LightingStyle, Look, Material, RebrickableColors, BoundingBox
 
 color = RebrickableColors.MediumAzure.value
