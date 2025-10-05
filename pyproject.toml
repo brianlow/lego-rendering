@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lego-rendering"
+version = "0.1.2"
+description = "LEGO rendering tools using Blender"
+authors = [{name = "Brian Low", email = "brian@brianlow.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pillow>=11.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["lego_rendering"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "renders/",
+    "ldraw/",
+    "docs/",
+    "*.zip",
+    ".git/",
+    ".venv/",
+    "*.blend",
+    "tmp/",
+    "__pycache__/",
+    "*.egg-info/",
+    "tests/",
+    ".pytest_cache/",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+]

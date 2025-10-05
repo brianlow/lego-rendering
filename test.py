@@ -1,40 +1,33 @@
 import sys
-import os
+import site
 
-# This script runs under Blender's python environment. Add the current
-# directly to the path so we can import our own modules
-dir_path = os.path.dirname(os.path.realpath(__file__))
-print(f"Prepending {dir_path} to Python path...")
-sys.path.insert(0, dir_path)
+# Add user site-packages to path so we can import lego_rendering
+# Alternatively, I think lego_rendering can be installed with sudo and --no-user to avoid this
+sys.path.insert(0, site.getusersitepackages())
+from lego_rendering import Renderer, RenderOptions, Quality, LightingStyle, Look, Material, RebrickableColors, BoundingBox
 
-from lib.renderer.renderer import Renderer
-from lib.renderer.render_options import Format, RenderOptions, Quality, LightingStyle, Look, Material
-from lib.colors import RebrickableColors
-from lib.bounding_box import BoundingBox
-
-color = RebrickableColors.MediumAzure.value
+color = RebrickableColors.TransLightBlue.value
 render_bbox = True
 
 renderer = Renderer(ldraw_path="./ldraw")
-
 options = RenderOptions(
     image_filename = "renders/test.png",
     bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
-    quality = Quality.DRAFT,
+    quality = Quality.NORMAL,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
     light_angle = 160,
-    part_rotation=(50, 90, 90),
+    part_rotation=(0, 0, 0),
     camera_height=84,
-    zoom=.95,
+    zoom=.99,
     look=Look.NORMAL,
     width=244,
     height=244,
 )
 
-renderer.render_part("3001", options)
+renderer.render_part("3005", options)
 
 # Draw bounding box on the rendered image
 if render_bbox and options.bounding_box_filename:

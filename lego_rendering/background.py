@@ -1,6 +1,6 @@
 import random
 from PIL import Image, ImageDraw
-from lib.colors import random_color_for_pil, hsv2rgb
+from lego_rendering.colors import random_color_for_pil, hsv2rgb
 
 def save_background_image(color, size, num_shapes, filename):
     img = Image.new('RGB', size, color)

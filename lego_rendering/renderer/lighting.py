@@ -2,8 +2,8 @@ import bpy
 import math
 from mathutils import Vector
 
-from lib.renderer.render_options import LightingStyle
-from lib.renderer.utils import rotate_around_z_origin, aim_towards_origin, set_height_by_angle
+from lego_rendering.renderer.render_options import LightingStyle
+from lego_rendering.renderer.utils import rotate_around_z_origin, aim_towards_origin, set_height_by_angle
 
 
 def setup_lighting(options):

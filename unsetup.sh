@@ -35,3 +35,7 @@ bpy.ops.wm.save_userpref()
 "
 "$BLENDER_EXECUTABLE" --background --python-expr "${X}"
 "$BLENDER_EXECUTABLE" --background --python-expr "${X}" # sometime need to run twice to fully uninstall
+
+# Uninstall lego-rendering package
+echo "Uninstalling lego-rendering package from Blender Python environment"
+"$BLENDER_EXECUTABLE" --background --python "$(pwd)/uninstall-package.py"

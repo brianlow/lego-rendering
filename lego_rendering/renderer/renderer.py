@@ -4,9 +4,9 @@ import os
 import tempfile
 from PIL import Image
 from math import radians
-from lib.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, select_hierarchy
-from lib.renderer.lighting import setup_lighting
-from lib.renderer.render_options import Material
+from lego_rendering.renderer.utils import place_object_on_ground, zoom_camera, set_height_by_angle, aim_towards_origin, get_2d_bounding_box, select_hierarchy
+from lego_rendering.renderer.lighting import setup_lighting
+from lego_rendering.renderer.render_options import Material
 from io_scene_importldraw.loadldraw.loadldraw import LegoColours, BlenderMaterials
 
 # Render Lego parts

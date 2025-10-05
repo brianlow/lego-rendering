@@ -2,7 +2,7 @@
 
 set -e
 
-IMPORTLDRAW_ZIP="$(pwd)/importldraw1.2.2.zip"
+IMPORTLDRAW_ZIP="$(pwd)/importldraw1.2.3.zip"
 BLENDER_DIR="/Applications/Blender.app"
 BLENDER_RESOURCES_DIR="${BLENDER_DIR}/Contents/Resources"
 BLENDER_EXECUTABLE="${BLENDER_DIR}/Contents/MacOS/Blender"
@@ -36,7 +36,6 @@ bpy.ops.wm.save_userpref()
 "
 "$BLENDER_EXECUTABLE" --background --python-expr "${X}"
 
-# Run pip install using the found python executable
-echo "Install pillow in the Blender Python environment"
-cd "$PYTHON_BIN_DIR"
-"$PYTHON_EXECUTABLE" -m pip install pillow
+# Run pip install using Blender's Python environment
+echo "Install lego-rendering in the Blender Python environment"
+"$BLENDER_EXECUTABLE" --background --python "$(pwd)/install-package.py"

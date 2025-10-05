@@ -3,7 +3,7 @@ import bpy
 import random
 from math import radians, sin, cos
 from mathutils import Vector, Matrix
-from lib.bounding_box import BoundingBox
+from lego_rendering.bounding_box import BoundingBox
 import glob
 from functools import reduce
 
