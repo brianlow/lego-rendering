@@ -18,7 +18,7 @@ options = RenderOptions(
     image_filename = "renders/test.png",
     bounding_box_filename = "renders/test.txt",
     blender_filename = "renders/test.blend",
-    quality = Quality.NORMAL,
+    quality = Quality.DRAFT,
     lighting_style = LightingStyle.DEFAULT,
     part_color = color.best_hex,
     material = Material.TRANSPARENT if color.is_transparent else Material.PLASTIC,
@@ -31,8 +31,18 @@ options = RenderOptions(
     height=244,
 )
 
+print("--------- Rendering 1/3 ---------")
+options.image_filename = "renders/test1.png"
 renderer.render_part("3005", options)
 
-# Draw bounding box on the rendered image
+# print("--------- Rendering 2/3 ---------")
+# options.image_filename = "renders/test2.png"
+# renderer.render_part("3001", options)
+
+# print("--------- Rendering 3/3 ---------")
+# options.image_filename = "renders/test3.png"
+# renderer.render_part("3002", options)
+
+Draw bounding box on the rendered image
 if render_bbox and options.bounding_box_filename:
-    BoundingBox.annotate(options.image_filename, options.bounding_box_filename)
+   BoundingBox.annotate(options.image_filename, options.bounding_box_filename)

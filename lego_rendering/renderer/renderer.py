@@ -8,6 +8,7 @@ from lego_rendering.renderer.utils import place_object_on_ground, zoom_camera, s
 from lego_rendering.renderer.lighting import setup_lighting
 from lego_rendering.renderer.render_options import Material
 from io_scene_importldraw.loadldraw.loadldraw import LegoColours, BlenderMaterials
+import io_scene_importldraw.loadldraw.loadldraw as loadldraw
 
 # Render Lego parts
 # This class is responsible for rendering a single image
@@ -158,5 +159,9 @@ class Renderer:
 
         # Clear caches. For the same reason above (LDRConfig changes)
         if self.has_imported_at_least_once:
+            # Reset the globalContext to avoid StructRNA error when reinitializing
+            # The ImportLDraw plugin stores the operator context which becomes invalid after the operation
+            loadldraw.globalContext = None
+
             LegoColours()
             BlenderMaterials.clearCache()
