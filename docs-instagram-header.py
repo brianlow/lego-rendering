@@ -17,7 +17,7 @@ default_options = RenderOptions(
     light_angle = 160,
     part_color=RebrickableColors.MediumBlue.value.best_hex,
     material = Material.PLASTIC,
-    zoom=0.0000000000000000000000001,
+    fill=0.8,
     width=1080,
     height=1350,
 )

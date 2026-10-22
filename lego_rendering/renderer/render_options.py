@@ -1,3 +1,4 @@
+import warnings
 from enum import Enum
 from math import radians
 
@@ -38,7 +39,8 @@ class RenderOptions:
                  material = Material.PLASTIC,
                  part_rotation = (0, 0, 0),    # rotation of the part in degrees, xyz tuple
                  camera_height = 45,           # height of the camera as degrees above the ground plane, 0 - 180
-                 zoom = 1.0,                   # 1.0 for part to fill frame, < 1.0 to zoom out, > 1.0 to zoom in
+                 zoom = 1.0,                   # deprecated, use fill. Moves the camera a fixed distance so the crop varies by part size
+                 fill = 1.0,                   # fraction of the frame the part fills, e.g. 0.8 leaves a 10% margin each side, > 1.0 crops the part
                  look = Look.NORMAL,           # normal (realistic) or instructions (line art)
                  format = Format.PNG,          # PNG = lossless, transparent backgrounds, JPG much smaller
                  ):
@@ -54,7 +56,10 @@ class RenderOptions:
         self.material = material
         self.part_rotation = part_rotation
         self.camera_height = camera_height
+        if zoom != 1.0:
+            warnings.warn("RenderOptions zoom is deprecated, use fill", DeprecationWarning, stacklevel=2)
         self.zoom = zoom
+        self.fill = fill
         self.look = look
         self.format = format
 

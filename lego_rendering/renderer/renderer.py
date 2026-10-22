@@ -17,6 +17,8 @@ class Renderer:
     def __init__(self, ldraw_path = "./ldraw"):
         self.ldraw_path = ldraw_path
         self.ldraw_parts_path = os.path.join(ldraw_path, "parts")
+        # ImportLDraw also searches here (see README Setup)
+        self.ldraw_unofficial_parts_path = os.path.join(ldraw_path, "unofficial", "parts")
         self.has_imported_at_least_once = False
 
     def render_part(self, ldraw_part_id, options):
@@ -60,6 +62,7 @@ class Renderer:
         aim_towards_origin(camera)
         bpy.ops.view3d.camera_to_view_selected()
         zoom_camera(camera, options.zoom)
+        camera.data.lens *= options.fill # image size scales with focal length, so this leaves the same margin for every part
 
 
         # Render
@@ -87,9 +90,10 @@ class Renderer:
     def import_part(self, ldraw_part_id, options):
         self.clear_scene()
 
-        part_filename = os.path.abspath(os.path.join(self.ldraw_parts_path, f"{ldraw_part_id}.dat"))
-        if not os.path.exists(part_filename):
-            raise FileNotFoundError(f"Part file not found: {part_filename}")
+        part_filenames = [os.path.abspath(os.path.join(parts_path, f"{ldraw_part_id}.dat"))
+                          for parts_path in (self.ldraw_parts_path, self.ldraw_unofficial_parts_path)]
+        if not any(os.path.exists(f) for f in part_filenames):
+            raise FileNotFoundError(f"Part file not found: {' or '.join(part_filenames)}")
 
 
         # Set the part color

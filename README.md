@@ -57,9 +57,9 @@ Camera height: degrees from 0-90
 
 ![grid of various camera angles](docs/camera-heights.png)
 
-Camera zoom
+Fill: fraction of the frame the part fills, the same for every part size
 
-![grid of various zoom levels](docs/zooms.png)
+![grid of various fill levels](docs/fill.png)
 
 
 ## Instruction Look
@@ -76,13 +76,22 @@ By default they are rendered with a transparent background. Use PNG format (`for
 - In your own a folder:
   - Download [LDraw parts library](https://library.ldraw.org/updates?latest)
   - `unzip complete.zip`
-  - Download [LDraw unofficial parts](https://library.ldraw.org/tracker)
-  - `unzip -o ldrawunf.zip -d ldraw`
+  - Download [LDraw unofficial parts](https://library.ldraw.org/tracker) (`ldrawunf.zip`)
+  - `unzip ldrawunf.zip -d ldraw/unofficial`
+    - Keep it in its own folder rather than unzipping over `ldraw/parts`, so
+      official files are never overwritten and either library can be updated
+      separately. ImportLDraw searches `ldraw/unofficial/{parts,p}` automatically
+      ("Include unofficial parts", on by default).
+    - Note ImportLDraw searches unofficial *before* official, so a part with a
+      pending fix on the tracker renders from the unofficial version.
   - At this point your current folder should look like
     ```
     ldraw/
       parts/
       p/
+      unofficial/
+        parts/
+        p/
       ...
     ```
   - In Blender, open the Python Console:
@@ -115,7 +124,7 @@ renderer.render_part("6126b", RenderOptions(
     light_angle = 160,
     part_rotation = (0, 0, 270),
     camera_height = 45,
-    zoom = 0.1,
+    fill = 0.8,
     look = Look.NORMAL,
     width = 244,
     height = 244,

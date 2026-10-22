@@ -10,16 +10,16 @@ from lego_rendering import RebrickableColors, RenderOptions, Quality, Renderer
 
 renderer = Renderer(ldraw_path="./ldraw")
 
-zooms = [0.001, 0.5, 1, 1.5, 2.0]
-for i, zoom in enumerate(zooms):
+fills = [0.25, 0.5, 0.75, 1.0, 1.25]
+for i, fill in enumerate(fills):
     renderer.render_part("2423", RenderOptions(
         image_filename = f"renders/docs{i}.png",
         quality=Quality.NORMAL,
         part_color=RebrickableColors.DarkGreen.value.best_hex,
-        zoom=zoom,
+        fill=fill,
         part_rotation=(0, 0, 0),
     ))
 
-images = [Image.open(f"renders/docs{i}.png") for i, s in enumerate(zooms)]
+images = [Image.open(f"renders/docs{i}.png") for i, s in enumerate(fills)]
 image = grid(images, 1, 5)
-image.save("docs/zooms.png")
+image.save("docs/fill.png")
