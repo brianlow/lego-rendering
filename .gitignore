@@ -5,3 +5,4 @@ ldraw-3/
 importldraw*
 .claude
 lego_rendering.egg-info
+.DS_Store
