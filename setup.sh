@@ -3,7 +3,7 @@
 set -e
 
 IMPORTLDRAW_ZIP="$(pwd)/importldraw1.3.0.zip"
-BLENDER_DIR="/Applications/Blender.app"
+BLENDER_DIR="${BLENDER_DIR:-/Applications/Blender.app}"
 BLENDER_RESOURCES_DIR="${BLENDER_DIR}/Contents/Resources"
 BLENDER_EXECUTABLE="${BLENDER_DIR}/Contents/MacOS/Blender"
 

@@ -104,7 +104,12 @@ By default they are rendered with a transparent background. Use PNG format (`for
 Alternatively, clone this repo, follow the above steps and run
 ```
 ./setup.sh
+
+# Blender installed somewhere other than /Applications/Blender.app
+BLENDER_DIR=/Applications/Blender5.app ./setup.sh
 ```
+
+Tested with Blender 4.3 and 5.2.
 
 ## Run
 
@@ -137,6 +142,7 @@ Run in Blender's Python environment:
 
 ```
 ./run.sh test.py         # renders to renders/test/png
+BLENDER_DIR=/Applications/Blender5.app ./run.sh test.py
 
 ./run-watch.sh test.py   # run test.py each time a .py file is saved
 ```
