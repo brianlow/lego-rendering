@@ -98,22 +98,19 @@ class Renderer:
 
         # Set the part color
         #
-        # We want to use our own colors that seem to be more realistic. The importer plugin doesn't
-        # support out of the box so we access some internals to create/modify a color reserved for us.
+        # We want to use our own colors that seem to be more realistic. We define a color
+        # in the model file with a !COLOUR line (https://www.ldraw.org/article/299) and use it for the part.
         #
         # Colors are tricky because:
         #   - the importer uses the LDraw color to determine color and material (e.g. transparent)
         #   - a part may have multiple materials (slopes 3039) and colors (hinged attenna 73587p01)
-        #   - colors are re-read from LDConfig.ldr each time the importer is invoked
+        #   - colors are re-read from LDConfig.ldr each time the importer is invoked, so we can't add to its color table
         ldraw_color = 99999
-        linearRGBA = LegoColours.hexDigitsToLinearRGBA(options.part_color.replace('#', ''), 1.0)
-        LegoColours.colours[99999] = {
-            "name": "lego-rendering-placeholder-color",
-            "colour": linearRGBA[0:3],
-            "alpha": 0.5 if options.material == Material.TRANSPARENT else 1,
-            "luminance": 0.0,
-            "material": "RUBBER" if options.material == Material.RUBBER else "BASIC",
-        }
+        color_definition = f"0 !COLOUR lego-rendering-placeholder-color CODE {ldraw_color} VALUE {options.part_color} EDGE #000000"
+        if options.material == Material.TRANSPARENT:
+            color_definition += " ALPHA 128"
+        if options.material == Material.RUBBER:
+            color_definition += " RUBBER"
 
         name = ""
         with tempfile.NamedTemporaryFile(suffix=".ldr", mode='w+', delete=False) as temp:
@@ -121,6 +118,7 @@ class Renderer:
             temp.write("0 Name:  UntitledModel\n")
             temp.write("0 Author:\n")
             temp.write("0 CustomBrick\n")
+            temp.write(f"{color_definition}\n")
             temp.write(f"1 {ldraw_color} 30.000000 -24.000000 -20.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 {ldraw_part_id}.dat\n")
 
             name = temp.name

@@ -72,7 +72,7 @@ By default they are rendered with a transparent background. Use PNG format (`for
 ## Setup
 
 - Install [Blender](https://blender.org)
-- Install [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw)
+- Install [ImportLDraw Plugin](https://github.com/TobyLobster/ImportLDraw) 1.3.0 or later
 - In your own a folder:
   - Download [LDraw parts library](https://library.ldraw.org/updates?latest)
   - `unzip complete.zip`
