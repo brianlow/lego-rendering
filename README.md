@@ -161,3 +161,7 @@ uv sync
 uv build
 uv publish
 ```
+
+## License
+
+[MIT](LICENSE). Blender, ImportLDraw and the LDraw parts library are installed separately and have their own licenses.
